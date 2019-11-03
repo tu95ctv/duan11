@@ -1,0 +1,15 @@
+<odoo>
+	<record model="ir.ui.view" id="importexcel_form">
+         <field name="name">import thu vien</field>
+         <field name="model">importexcel.importexcel</field>
+         <field name="inherit_id" ref="importexcel.importexcel_form"></field>
+         <field name="arch" type="xml">
+                        <field name="filename" position="after" >
+                        	<field name="app"/>
+                        	<field name="single_app"/>
+                        	<field name="extend_app"/>
+                        </field>
+                  </field>
+                  </record>
+                        
+</odoo>

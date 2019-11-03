@@ -1,0 +1,245 @@
+<odoo>
+    <data>
+    <record id="tour_travel.tour_date_form_view" model="ir.ui.view">
+         <field name="name">tour.date.form</field>
+         <field name="model">tour.date</field>
+         <field name="type">form</field>
+         <field name="priority">8</field>
+         <field name="arch" type="xml"><form string="Tour Date">
+					<header>
+						<button name="action_open" type="object" states="draft" string="Open Tour Date" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="action_start" type="object" states="open" string="Start Tour Date" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="action_cancel" type="object" states="open" string="Cancel" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="action_done" type="object" states="start" string="Finish" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="action_draft" type="object" states="cancel" string="Set to Draft" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<field name="state" readonly="1" statusbar_visible="draft,confirm,start,done" widget="statusbar"/>
+					</header>
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button class="oe_inline oe_stat_button" type="action" name="279" context="{'search_default_tour_date_id': active_id}" icon="fa-star">
+								<field string="Leads" name="lead_count" widget="statinfo"/>
+							</button>
+							<button class="oe_inline oe_stat_button" type="action" name="280" context="{'search_default_tour_date_id': active_id}" icon="fa-star">
+								<field string="Opportunities" name="oppor_count" widget="statinfo"/>
+							</button>
+							<button class="oe_inline oe_stat_button" type="action" name="414" icon="fa-strikethrough">
+								<field string="Quotations" name="tour_quotation_count" widget="statinfo"/>
+							</button>
+							<button class="oe_inline oe_stat_button" type="action" name="413" icon="fa-strikethrough">
+								<field string="Tour Bookings" name="tour_booking_count" widget="statinfo"/>
+							</button>
+							<button class="oe_inline oe_stat_button" name="action_view_attendee" type="object" icon="fa-user">
+								<field string="Attendees" name="attendee_count" widget="statinfo"/>
+							</button>
+							<button class="oe_inline oe_stat_button" type="action" name="416" icon="fa-shopping-cart">
+								<field string="RFQs" name="rfq_count" widget="statinfo"/>
+							</button>
+							<button class="oe_inline oe_stat_button" name="415" type="action" icon="fa-shopping-cart">
+								<field string="Purchases" name="purchase_order_count" widget="statinfo"/>
+							</button>
+							 <button class="oe_stat_button" type="action" name="419" icon="fa-usd" string="Cost/Revenue" widget="statinfo" attrs="{'invisible': [('analytic_account_id', '=', False)]}" context="{'analytic_account_id': analytic_account_id}" groups="tour_travel.group_tour_travel_manager"/>
+						</div>
+						<div class="oe_title">
+							<label for="name" class="oe_edit_only" string="Code"/>
+							<h1>
+								<field name="name" readonly="1"/>
+							</h1>
+						</div>
+						<group>
+							<group>
+								<field name="tour_id" context="{'search_default_specific':'tour','default_specific':'tour','default_type': 'service'}"/>
+								<field name="tour_type"/>
+								<field name="total_seat"/>
+								<field name="available_seat"/>
+							</group>
+							<group>
+								<field name="duration"/>
+								<field name="start_date"/>
+								<field name="end_date" invisible="1"/>
+								<field name="book_date"/>
+								<field name="analytic_account_id"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Tour Variants">
+								<field name="tour_variant_ids" nolabel="1">
+									<tree string="Tour Variants" editable="bottom">
+										<field name="product_id" domain="[('product_tmpl_id','=',parent.tour_id)]"/>
+										<field name="name"/>
+										<field name="price"/>
+										<field name="qty_booked"/>
+										<field name="uom_id"/>
+									</tree>
+								</field>
+								<field name="description" placeholder="describe the tour date..."/>
+							</page>
+							<page string="Programs">
+								<field name="tour_date_program_ids">
+									<tree string="Tour Programs" editable="bottom">
+										<field name="day"/>
+										<field name="tour_program_id"/>
+										<field name="breakfast"/>
+										<field name="lunch"/>
+										<field name="dinner"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Destinations">
+								<field name="tour_date_destination_ids">
+									<tree string="Tour Date Destination">
+										<field name="destination_id"/>
+										<field name="city"/>
+										<field name="state_id"/>
+										<field name="country_id"/>
+										<field name="days"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Transports">
+								<field name="tour_date_transport_ids">
+									<tree string="Tour Date Transport">
+										<field name="from_destination"/>
+										<field name="to_destination"/>
+										<field name="transport_id"/>
+										<field name="carrier_id"/>
+										<field name="carrier_line"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Hotels">
+								<field name="tour_date_hotel_ids">
+									<tree string="Hotel Information">
+										<field name="hotel_class_id"/>
+										<field name="hotel_id"/>
+										<field name="room_id"/>
+										<field name="days"/>
+										<field name="auto_booking" invisible="1"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Gifts &amp; Other Inclusion">
+								<field name="tour_date_product_ids">
+									<tree string="Products" editable="bottom">
+										<field name="product_id"/>
+										<field name="name"/>
+										<field name="product_uom_qty"/>
+										<field name="product_uom" groups="product.group_uom"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+						<field name="message_ids" widget="mail_thread"/>
+					</div>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.tour_date_transport_form_view" model="ir.ui.view">
+         <field name="name">tour.date.transport.form</field>
+         <field name="model">tour.date.transport</field>
+         <field name="type">form</field>
+         <field name="priority">8</field>
+         <field name="arch" type="xml"><form string="Tour Date Transport">
+					<group>
+						<group>
+							<field name="from_destination"/>
+							<field name="to_destination"/>
+							<field name="time"/>
+							<field name="distance"/>
+						</group>
+						<group>
+							<field name="transport_id"/>
+							<field name="carrier_id"/>
+							<field name="carrier_line" context="{'search_default_specific':'transport','default_specific':'transport'}"/>
+							<field name="product_name" invisible="1"/>
+						</group>
+					</group>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.tour_date_destination_line_form_view" model="ir.ui.view">
+         <field name="name">tour.date.destination.form</field>
+         <field name="model">tour.date.destination</field>
+         <field name="type">form</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><form string="Tour Date Destination">
+					<group>
+						<group>
+							<field name="destination_id"/>
+							<field name="city"/>
+							<field name="state_id"/>
+							<field name="country_id"/>
+						</group>
+						<group>
+							<field name="days"/>
+						</group>
+					</group>
+					<separator string="Hotel Information"/>
+					<field name="hotel_ids">
+						<tree string="Tour Date Destination" editable="bottom">
+							<field name="hotel_class_id"/>
+							<field name="hotel_id" domain="[('hotel_class_id','=',hotel_class_id)]"/>
+							<field name="room_id" domain="[('hotel_id','=',hotel_id)]"/>
+							<field name="days"/>
+							<field name="auto_booking" invisible="1"/>
+						</tree>
+					</field>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.tour_date_attendee_tree_view" model="ir.ui.view">
+         <field name="name">tour.date.attendee.tree</field>
+         <field name="model">res.partner</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Attendees">
+					<field name="name"/>
+					<field name="phone"/>
+					<field name="email"/>
+					<field name="mobile"/>
+					<field name="gender"/>
+					<field name="date_of_birth"/>
+					<field name="passport_number"/>
+					<field name="passport_expiry_date"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.tour_date_tree_view" model="ir.ui.view">
+         <field name="name">tour.date.tree</field>
+         <field name="model">tour.date</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Tour Date" decoration-info="state=='draft'" decoration-muted="state=='cancel'" decoration-warning="state in ('open', 'start') and available_seat &lt; 0" decoration-bf="state in ['open','start'] and available_seat &gt;= 0">
+					<field name="name"/>
+					<field name="tour_id"/>
+					<field name="start_date"/>
+					<field name="end_date"/>
+					<field name="book_date"/>
+					<field name="total_seat"/>
+					<field name="available_seat"/>
+					<field name="state"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.tour_date_search_view" model="ir.ui.view">
+         <field name="name">tour.date.search</field>
+         <field name="model">tour.date</field>
+         <field name="type">search</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><search string="Search Tour Date">
+					<field name="name" string="Tour Date Code." filter_domain="[('name','ilike',self)]"/>
+					<field name="tour_id"/>
+					<separator/>
+					<group expand="0" string="Group By">
+						<filter string="Tour" domain="[]" context="{'group_by':'tour_id'}"/>
+						<filter string="Departure Date" domain="[]" context="{'group_by':'start_date'}"/>
+						<filter string="Booking Deadline" domain="[]" context="{'group_by':'book_date'}"/>
+						<filter string="Tour Type" domain="[]" context="{'group_by':'tour_type'}"/>
+					</group>
+				</search>
+         </field>
+</record>
+    </data>
+</odoo>

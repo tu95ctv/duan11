@@ -1,0 +1,107 @@
+<odoo>
+    <data>
+    <record id="tour_travel.visa_form_view" model="ir.ui.view">
+         <field name="name">visa.form</field>
+         <field name="model">visa</field>
+         <field name="type">form</field>
+         <field name="priority">8</field>
+         <field name="arch" type="xml"><form string="Visa">
+					<header>
+						<button name="action_expire" string="Force to expire" type="object" states="available" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<field name="state" readonly="1" statusbar_visible="available, expire" widget="statusbar"/>
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="name"/>
+								<field name="issue_date"/>
+								<field name="expiry_date"/>
+							</group>
+							<group>
+								<field name="country_id"/>
+								<field name="type_id"/>
+								<field name="partner_id" context="{'search_default_customer':1,'default_customer':1,'search_default_is_company':0,'default_is_company':0}"/>
+								<field name="passport_id" domain="['&amp;',('partner_id','=',partner_id),('state','=','available')]"/>
+							</group>							
+						</group>
+						<separator string="Image"/>
+						<field name="visa_img" img_width="100%" img_height="auto" width="100%" widget="image"/>
+					</sheet>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.visa_type_form_view" model="ir.ui.view">
+         <field name="name">visa.type.form</field>
+         <field name="model">visa.type</field>
+         <field name="type">form</field>
+         <field name="priority">8</field>
+         <field name="arch" type="xml"><form string="Visa Type">
+					<sheet>
+						<group>
+							<group>
+								<field name="name"/>
+							</group>
+							<group>
+								<field name="duration"/>
+								<!-- <field name="limit_date" invisible="1" /> -->
+							</group>
+						</group>
+					</sheet>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.visa_tree_view" model="ir.ui.view">
+         <field name="name">visa.tree</field>
+         <field name="model">visa</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Visa" decoration-warning="state=='expire'">
+					<field name="name"/>
+					<field name="passport_id"/>
+					<field name="country_id"/>
+					<field name="partner_id"/>
+					<field name="type_id"/>
+					<field name="issue_date"/>
+					<field name="expiry_date"/>
+					<field name="state"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.visa_type_tree_view" model="ir.ui.view">
+         <field name="name">visa.type.tree</field>
+         <field name="model">visa.type</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Visa Type">
+					<field name="name"/>
+					<field name="duration"/>
+					<!-- <field name="limit_date" /> -->
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.visa_search_view" model="ir.ui.view">
+         <field name="name">visa.search</field>
+         <field name="model">visa</field>
+         <field name="type">search</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><search string="Search">
+					<field name="name" string="Visa Number" filter_domain="[('name','ilike', self)]"/>
+					<field name="passport_id" string="Passport Number" filter_domain="[('passport_id','ilike', self)]"/>
+					<field name="country_id" string="Country" filter_domain="[('country_id','ilike', self)]"/>
+					<field name="partner_id" string="Holder" filter_domain="[('partner_id','ilike', self)]"/>
+					<field name="type_id" string="Visa Type" filter_domain="[('type_id','ilike', self)]"/>
+					<separator/>
+					<filter string="Available" name="available" domain="[('state','=','available')]" help="Available"/>
+					<filter string="Expire" name="expire" domain="[('state','=','expire')]" help="Expire"/>
+					<group expand="0" string="Group By...">
+						<filter string="Passport Number" domain="[]" context="{'group_by':'passport_id'}"/>
+						<filter string="Country" domain="[]" context="{'group_by':'country_id'}"/>
+						<filter string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
+						<filter string="Visa Type" domain="[]" context="{'group_by':'type_id'}"/>
+						<filter string="Monthly Expire" icon="terp-go-month" domain="[]" context="{'group_by':'expiry_date'}"/>
+					</group>
+				</search>
+         </field>
+</record>
+    </data>
+</odoo>

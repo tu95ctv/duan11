@@ -1,0 +1,67 @@
+<odoo>
+    <data>
+    <record id="tour_travel.tour_booking_inherit_form" model="ir.ui.view">
+         <field name="name">tour.booking.form</field>
+         <field name="model">sale.order</field>
+         <field name="type">form</field><field name="inherit_id" ref="sale.view_order_form"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><data><field name="partner_id" position="after">
+					<field name="is_tour_booking"/>
+					<field name="tour_date_id" attrs="{'invisible': [('is_tour_booking','=',False)]}"/>
+					<field name="book_date" attrs="{'invisible': [('is_tour_booking','=',False)]}"/>
+				</field>
+				<xpath expr="//notebook" position="inside">
+					<page string="Attendees" attrs="{'invisible': [('is_tour_booking','=',False)]}">
+						<field name="tour_attendee_ids">
+							<tree string="Tour Attendees" editable="bottom">
+								<field name="partner_id"/>
+								<field name="date_of_birth"/>
+								<field name="attendee_id"/>
+								<field name="gender"/>
+							</tree>
+						</field>
+					</page>
+				</xpath>
+			</data>
+         </field>
+</record>
+<record id="tour_travel.tour_quotation_tree_view" model="ir.ui.view">
+         <field name="name">tour.booking.tree</field>
+         <field name="model">sale.order</field>
+         <field name="type">tree</field><field name="inherit_id" ref="sale.view_quotation_tree"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><field name="state" position="before">
+					<field name="attendee_count"/>
+				</field>
+         </field>
+</record>
+<record id="tour_travel.tour_booking_tree_view" model="ir.ui.view">
+         <field name="name">t.tour.booking.tree</field>
+         <field name="model">sale.order</field>
+         <field name="type">tree</field><field name="inherit_id" ref="sale.view_order_tree"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><field name="state" position="before">
+					<field name="attendee_count"/>
+				</field>
+         </field>
+</record>
+<record id="tour_travel.tour_booking_inherit_search" model="ir.ui.view">
+         <field name="name">tour.booking.search</field>
+         <field name="model">sale.order</field>
+         <field name="type">search</field><field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><data><field name="partner_id" position="after">
+					<field name="tour_date_id"/>
+				</field>
+				<xpath expr="//filter[@name='customer']" position="after">
+					<filter name="tour_date" string="Tour Date" domain="[('is_tour_booking', '=', True)]" context="{'group_by':'tour_date_id'}"/>
+				</xpath>
+			</data>
+         </field>
+</record>
+    </data>
+</odoo>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+   <data>
+      <record id="model_gen_form_view" model="ir.ui.view">
+         <field name="name">model_gen.form</field>
+         <field name="model">import_adj.model_gen</field>
+         <field name="arch" type="xml">
+            <form string="model_gen">
+               <header>
+                  <!--  <button class="oe_highlight" type="object" string="Test_search" name="test_search"  />-->
+                  <!-- <button class="oe_highlight" type="object" string="set_list_of_models" name="set_list_of_models"  /> -->
+                  <button class="oe_highlight" type="object" string="gen_model_and_field" name="gen_model_and_field"  />
+                  <button class="oe_highlight" type="object" string="gen_action" name="gen_action"  />
+                  <button class="oe_highlight" type="object" string="gen_view" name="gen_view"  />
+                  <button class="oe_highlight" type="object" string="gen_menu" name="gen_menu"  />
+                  <button class="oe_highlight" type="object" string="model_name_look" name="model_name_look"  />
+                  <button class="oe_highlight" type="object" string="gen_declare_model_extend_inherit" name="gen_declare_model_extend_inherit"  />
+                  <button class="oe_highlight" type="object" string="related_deal" name="related_deal"  />
+                  <button class="oe_highlight" type="object" string="gen_related_model" name="gen_related_model"  />
+                  <button class="oe_highlight" type="object" string="test_rpc" name="test_rpc"  />
+                 <!-- 
+                  <button class="oe_highlight" type="object" string="Confirm" name="action_waiting_for_approval" states="draft" />
+                  <button class="oe_highlight" type="object" string="Approved" name="action_approved" states="waiting_for_approval,rejected" groups="model_gen.group_model_gen_manager" />
+                  <button class="oe_highlight" type="object" string="Rejected" name="action_rejected" states="waiting_for_approval,approved" groups="model_gen.group_model_gen_manager" />
+                  <field name="state" widget="statusbar" /> -->
+               </header>
+               <sheet>
+                  <group>
+                  	 <field name="app"/>
+                  	 <field name="module_inherits"/>
+                  	 <field name="relation_not_finds"/>
+                  	 <field name="pre_models"/>
+                     <field name="test2"/>
+                     <field name="models" />
+                     <field name="models_ids" />
+                     <field name="test"/>
+                  </group>
+               </sheet>
+            </form>
+         </field>
+      </record>
+      <record id="model_gen_list_view" model="ir.ui.view">
+         <field name="name">model_gen.list</field>
+         <field name="model">import_adj.model_gen</field>
+         <field name="arch" type="xml">
+            <tree string="model_gen">
+               <!-- <field name="models" /> -->
+               <field name="models_ids" />
+            </tree>
+         </field>
+      </record>
+      <record id="model_gen_action" model="ir.actions.act_window">
+         <field name="name">model_gen</field>
+         <field name="res_model">import_adj.model_gen</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="domain" />
+         <field name="context">{}</field>
+      </record>
+   </data>
+</odoo>

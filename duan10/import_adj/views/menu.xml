@@ -1,0 +1,27 @@
+<odoo>
+  <data>
+   <menuitem name="Import menu" id="import_menu" sequence="15" /> <!-- web_icon="stock,static/description/icon.png" -->
+   <!-- 
+   <menuitem id="ir_model_import_menu" name="ir_model_import_menu" parent="import_menu"  action="ir_model_import_action"/>
+   <menuitem id="ir_model_fields_import_menu" name="ir_model_fields_import_menu" parent="import_menu"  action="ir_model_fields_import_action"/>
+    -->
+   
+   <menuitem id="model_gen_menu" name="model_gen_menu" parent="import_menu"  action="model_gen_action"/>
+   
+   <menuitem id="fields_import_menu" name="fields_import_menu" parent="import_menu"  action="fields_import_action"/>
+   <menuitem id="model_import_menu" name="model_import_menu" parent="import_menu"  action="model_import_action"/>
+   <menuitem id="action_import_menu" name="action_import_menu" parent="import_menu"  action="action_import_action"/>
+   
+   <menuitem id="menu_import_menu" name="menu_import_menu" parent="import_menu"  action="menu_import_action"/>
+   <menuitem id="view_import_menu" name="view_import_menu" parent="import_menu"  action="view_import_action"/>
+   <!-- 
+   <menuitem name="Inventory" id="menu_stock_root" sequence="30"
+        groups="group_stock_manager,group_stock_user"
+        web_icon="stock,static/description/icon.png"/>
+    <menuitem id="menu_stock_warehouse_mgmt" name="Operations" parent="menu_stock_root" sequence="2"/>
+
+    <menuitem id="menu_stock_config_settings" name="Configuration" parent="menu_stock_root"
+        sequence="100" groups="group_stock_manager"/>
+         -->
+  </data>
+</odoo>

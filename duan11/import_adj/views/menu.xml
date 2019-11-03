@@ -1,0 +1,17 @@
+<odoo>
+  <data>
+   <menuitem name="Import menu" id="import_menu" sequence="15" /> <!-- web_icon="stock,static/description/icon.png" -->
+   <!-- 
+   <menuitem id="ir_model_import_menu" name="ir_model_import_menu" parent="import_menu"  action="ir_model_import_action"/>
+   <menuitem id="ir_model_fields_import_menu" name="ir_model_fields_import_menu" parent="import_menu"  action="ir_model_fields_import_action"/>
+    -->
+   
+   <menuitem id="model_gen_menu" name="model_gen_menu" parent="importexcel.import_icon"  action="model_gen_action"/>
+   <menuitem id="model_import_menu" name="model import menu" parent="importexcel.import_icon"  action="model_import_action"/>
+   <menuitem id="fields_import_menu" name="fields import menu" parent="importexcel.import_icon"  action="fields_import_action"/>
+   <menuitem id="action_import_menu" name="action import menu" parent="importexcel.import_icon"  action="action_import_action"/>
+   <menuitem id="menu_import_menu" name="menu import menu" parent="importexcel.import_icon"  action="menu_import_action"/>
+   <menuitem id="view_import_menu" name="view import menu" parent="importexcel.import_icon"  action="view_import_action"/>
+   
+  </data>
+</odoo>

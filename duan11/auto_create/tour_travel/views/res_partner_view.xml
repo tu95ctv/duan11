@@ -1,0 +1,34 @@
+<odoo>
+    <data>
+    <record id="tour_travel.tour_partner_inherit_form" model="ir.ui.view">
+         <field name="name">tour.partner.inherit.form</field>
+         <field name="model">res.partner</field>
+         <field name="type">form</field><field name="inherit_id" ref="base.view_partner_form"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><data><field name="title" position="after">
+            		<field name="partner_id" attrs="{'invisible': [('is_company','=',True)]}"/>
+            		<field name="date_of_birth" attrs="{'invisible': [('is_company','=',True)]}"/>
+            		<field name="gender" attrs="{'invisible': [('is_company','=',True)]}"/>
+            	</field>
+            	<page name="internal_notes" position="after">
+            		<page string="Passports" attrs="{'invisible': [('is_company','=',True)]}">
+            			<field name="passport_ids" nolable="1"/>            			
+            		</page>            	
+            	</page>
+            </data>
+         </field>
+</record>
+<record id="tour_travel.tour_partner_inherit_search" model="ir.ui.view">
+         <field name="name">tour.partner.inherit.search</field>
+         <field name="model">res.partner</field>
+         <field name="type">search</field><field name="inherit_id" ref="base.view_res_partner_filter"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><field name="name" position="after">
+					<field name="tour_date_ids"/>
+				</field>
+         </field>
+</record>
+    </data>
+</odoo>

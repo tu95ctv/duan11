@@ -1,0 +1,34 @@
+<odoo>
+    <data>
+    <menuitem id="tour_travel.menu_tour_travel_root" name="Tour &amp; Travel"   sequence="15"/>
+<menuitem id="tour_travel.menu_tour_travel_config" name="Configuration" parent="tour_travel.menu_tour_travel_root"   sequence="20"/>
+<menuitem id="tour_travel.hotel_hotel_config_menu" name="Hotels" parent="tour_travel.menu_tour_travel_config"   sequence="3"/>
+<menuitem id="tour_travel.hotel_hotel_root_menu" name="Hotels" parent="tour_travel.menu_tour_travel_root"   sequence="3"/>
+<menuitem id="tour_travel.menu_passport" name="Passport" parent="tour_travel.menu_tour_travel_root"   sequence="5"/>
+<menuitem id="tour_travel.menu_passport_visa_config_menu" name="Passport &amp; Visa" parent="tour_travel.menu_tour_travel_config"   sequence="4"/>
+<menuitem id="tour_travel.menu_visa" name="Visa" parent="tour_travel.menu_tour_travel_root"   sequence="6"/>
+<menuitem id="tour_travel.tour_booking_root_menu" name="Tour Booking" parent="tour_travel.menu_tour_travel_root"   sequence="1"/>
+<menuitem id="tour_travel.tour_config_menu" name="Tours" parent="tour_travel.menu_tour_travel_config"   sequence="3"/>
+<menuitem id="tour_travel.tour_root_menu" name="Tours" parent="tour_travel.menu_tour_travel_root"   sequence="2"/>
+<menuitem id="tour_travel.transport_root_menu" name="Transports" parent="tour_travel.menu_tour_travel_root"   sequence="4"/>
+<menuitem id="tour_travel.tour_booking_menu" name="Tour Booking" parent="tour_travel.tour_booking_root_menu"  action="tour_travel.act_tour_date_2_tour_booking" sequence="3"/>
+<menuitem id="tour_travel.destination_menu" name="Destinations" parent="tour_travel.menu_tour_travel_config"  action="tour_travel.destination_action" sequence="2"/>
+<menuitem id="tour_travel.service_document_menu" name="Document Type" parent="tour_travel.menu_passport_visa_config_menu"  action="tour_travel.document_type_action" sequence="1"/>
+<menuitem id="tour_travel.hotel_hotel_information_menu" name="Hotel Information" parent="tour_travel.hotel_hotel_root_menu"  action="tour_travel.hotel_action" sequence="1"/>
+<menuitem id="tour_travel.hotel_class_menu" name="Hotel Type" parent="tour_travel.hotel_hotel_config_menu"  action="tour_travel.hotel_class_action" sequence="1"/>
+<menuitem id="tour_travel.hotel_reservation_menu" name="Hotel Reservation" parent="tour_travel.hotel_hotel_root_menu"  action="tour_travel.hotel_reservation_action" sequence="2"/>
+<menuitem id="tour_travel.passport_menu" name="Passport" parent="tour_travel.menu_passport"  action="tour_travel.passport_action" sequence="1"/>
+<menuitem id="tour_travel.passport_booking_menu" name="Passport Booking" parent="tour_travel.menu_passport"  action="tour_travel.passport_booking_action" sequence="2"/>
+<menuitem id="tour_travel.tour_menu" name="Tours" parent="tour_travel.tour_root_menu"  action="tour_travel.tour_action" sequence="1"/>
+<menuitem id="tour_travel.tour_date_menu" name="Tour Date" parent="tour_travel.tour_booking_root_menu"  action="tour_travel.tour_date_action" sequence="1"/>
+<menuitem id="tour_travel.tour_quotations_menu" name="Quotations" parent="tour_travel.tour_booking_root_menu"  action="tour_travel.tour_quotation_action" sequence="2"/>
+<menuitem id="tour_travel.tour_type_menu" name="Tour Type" parent="tour_travel.tour_config_menu"  action="tour_travel.tour_type_action" sequence="1"/>
+<menuitem id="tour_travel.tour_variant" name="Tour Variants" parent="tour_travel.tour_root_menu"  action="tour_travel.tour_variant_action" sequence="2"/>
+<menuitem id="tour_travel.visa_menu" name="Visa" parent="tour_travel.menu_visa"  action="tour_travel.visa_action" sequence="1"/>
+<menuitem id="tour_travel.visa_booking_menu" name="Visa Booking" parent="tour_travel.menu_visa"  action="tour_travel.visa_booking_action" sequence="2"/>
+<menuitem id="tour_travel.visa_type_menu" name="Visa Type" parent="tour_travel.menu_passport_visa_config_menu"  action="tour_travel.visa_type_action" sequence="2"/>
+<menuitem id="tour_travel.transport_menu" name="Providers" parent="tour_travel.transport_root_menu"  action="tour_travel.transport_action" sequence="1"/>
+<menuitem id="tour_travel.tour_program_menu" name="Tour Programs" parent="tour_travel.tour_config_menu"  action="tour_travel.tour_program_action" sequence="4"/>
+<menuitem id="tour_travel.transport_config_menu" name="Transports" parent="tour_travel.menu_tour_travel_config"   sequence="4"/>
+    </data>
+</odoo>

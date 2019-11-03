@@ -1,0 +1,88 @@
+<odoo>
+    <data>
+    <record id="tour_travel.report_attendee_declaration" model="ir.ui.view">
+         <field name="name">report_attendee_declaration</field>
+         <field name="model"></field>
+         <field name="type">qweb</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><t t-name="tour_travel.report_attendee_declaration">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+		            <t t-call="tour_travel.attendee_declaration_doc"/>
+		        </t>
+			</t>
+		</t>
+         </field>
+</record>
+<record id="tour_travel.attendee_declaration_doc" model="ir.ui.view">
+         <field name="name">tour_travel.attendee_declaration_doc</field>
+         <field name="model"></field>
+         <field name="type">qweb</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><t t-name="tour_travel.attendee_declaration_doc">
+			<t t-call="web.basic_layout">
+				<div class="page">
+					<h2 class="text-center" style="margin-top:10px">PERSONAL DECLARATION</h2>
+					<div style="margin-top:15px;">
+							<strong style="font-size:18px">1. Full Name:</strong> <span t-esc="convertText(o.name, is_ascii)" style="font-size:18px"/><br/>
+							<strong>2. Address:</strong> <span t-esc="convertText(o.street,is_ascii)"/><t t-if="o.street2">, <span t-esc="convertText(o.street2,is_ascii)"/></t><t t-if="o.city">, <span t-esc="convertText(o.city,is_ascii)"/></t><t t-if="o.state_id">, <span t-esc="convertText(o.state_id.name,is_ascii)"/></t><t t-if="o.country_id">, <span t-esc="convertText(o.country_id.name,is_ascii)"/></t><br/>
+						</div>
+					<div class="row">						
+						<div class="col-xs-4">							
+							<strong>3. ID:</strong> <span t-field="o.partner_id"/><br/>
+							<strong>4. Phone:</strong> <span t-esc="o.phone"/><br/>							
+						</div>
+						<div class="col-xs-4">
+							<strong>Gender:</strong> <span t-field="o.gender"/><br/>
+							<strong>Mobile:</strong> <span t-esc="o.mobile"/><br/>
+						</div>
+						<div class="col-xs-4">
+							<strong>Birth date:</strong> <span t-esc="convertDate(o.date_of_birth)"/><br/>							
+							<strong>Email:</strong> <span t-esc="o.email"/><br/>
+						</div>
+					</div>
+					<t t-foreach="o.passport_ids" t-as="passport">
+						<t t-if="passport.state=='available'">
+							<h3 style="width:100%;background-color:#ccc;padding:5px;">
+								PASSPORT INFORMATION
+							</h3>
+							<div class="row">	
+								<div class="col-xs-3">
+									<p><strong>Passport Number:</strong></p>
+									<p><strong>Issue Date:</strong></p>
+									<p><strong>Expiry Date:</strong></p>
+								</div>	
+								<div class="col-xs-9">
+									<p><t t-if="o.passport_number"><span t-esc="o.passport_number.upper()"/></t></p>
+									<p><span t-esc="convertDate(o.passport_isue_date)"/></p>
+									<p><span t-esc="convertDate(o.passport_expiry_date)"/></p>									
+								</div>
+							</div>							
+						</t>
+						<t t-if="passport.state=='available' and passport.visa_ids">
+							<h3 style="width:100%;background-color:#ccc;padding:5px;">
+								VISA INFORMATION
+							</h3>
+							<table class="table">
+								<tr>
+									<th>Visa Number</th>
+									<th>Country</th>
+									<th>Issue Date</th>
+									<th>Expiry Date</th>
+								</tr>
+								<tr t-foreach="passport.visa_ids" t-as="visa">
+									<td><span t-esc="visa.name"/></td>
+									<td><span t-esc="convertText(visa.country_id.name, is_ascii)"/></td>
+									<td><span t-esc="convertDate(visa.issue_date)"/></td>
+		        					<td><span t-esc="convertDate(visa.expiry_date)"/></td>
+								</tr>
+							</table>
+						</t>
+					</t>
+				</div>
+			</t>
+		</t>
+         </field>
+</record>
+    </data>
+</odoo>

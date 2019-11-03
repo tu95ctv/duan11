@@ -1,0 +1,141 @@
+<odoo>
+	<data>
+		<record id="fields_import_form_view" model="ir.ui.view">
+         <field name="name">fields_import.form</field>
+         <field name="model">import_adj.fields_import</field>
+         <field name="arch" type="xml">
+            <form string="fields_import">
+               <header>
+	               <!-- 
+	                  <button class="oe_highlight" type="object" string="Test_search" name="test_search"  />
+	                  <button class="oe_highlight" type="object" string="set_list_of_models" name="set_list_of_models"  />
+	                -->
+               </header>
+               <sheet>
+                  <group>
+                  		<field name="id_char"/>
+                  	 	<field name="name"/>
+                  	 	<field name="copy"/>
+						<field name="depends"/>
+						<field name="domain"/>
+						<field name="field_description"/>
+						<field name="groups"/>
+						<field name="help"/>
+						<field name="index"/>
+						<field name="model"/>
+						<field name="model_id"/>
+						<field name="modules"/>
+						<field name="on_delete"/>
+						<field name="readonly"/>
+						<field name="related"/>
+						<field name="relation"/>
+						<field name="relation_field"/>
+						<field name="relation_table"/>
+						<field name="required"/>
+						<field name="selectable"/>
+						<field name="selection"/>
+						<field name="size"/>
+						<field name="state"/>
+						<field name="store"/>
+						<field name="translate"/>
+						<field name="ttype"/>
+
+                  </group>
+               </sheet>
+            </form>
+         </field>
+      </record>
+      <record id="fields_import_list_view" model="ir.ui.view">
+         <field name="name">fields_import.list</field>
+         <field name="model">import_adj.fields_import</field>
+         <field name="arch" type="xml">
+            <tree string="fields_import">
+               <field name="name"/>
+                  	 	<field name="id_char"/>
+                  	 	<field name="name"/>
+						<field name="field_description"/>
+						<field name="model"/>
+						<field name="model_id"/>
+						<field name="model_name_look"/>
+						<field name="model_look1"/>
+						<field name="model_look2"/>
+						<field name="model_look_sum"/>
+						<field name="is_inherit"/>
+						<field name="app_of_model"/>
+						<field name="related"/>
+						<field name="field1_model_name"/>
+						<field name="field2"/>
+						<field name="field2_name"/>
+						<field name="relation"/>
+						<field name="relation_search"/>
+						<field name="relation_field"/>
+						<field name="relation_table"/>
+                  	 	<field name="copy"/>
+						<field name="depends"/>
+						<field name="domain"/>
+						<field name="groups"/>
+						<field name="help"/>
+						<field name="index"/>
+						<field name="modules"/>
+						<field name="on_delete"/>
+						<field name="readonly"/>
+
+						<field name="required"/>
+						<field name="selectable"/>
+						<field name="selection"/>
+						<field name="size"/>
+						<field name="state"/>
+						<field name="store"/>
+						<field name="translate"/>
+						<field name="ttype"/>
+            </tree>
+         </field>
+      </record>
+      
+       <record id="field_import_search_view" model="ir.ui.view">
+        <field name="name">import_adj.fields_import.search.view</field>
+        <field name="model">import_adj.fields_import</field>
+        <field name="arch" type="xml">
+            <search string="fields import">
+                <field name="name" />
+                <field name="model_id" />
+                <field name="relation" />
+                 <filter name="model_look_sum_groupby" string="model_look_sum"
+                        context="{'group_by': 'model_look_sum'}"/>
+                        
+                 <filter name="field1_model_name_group" string="field1_model_name_group" context="{'group_by': 'field1_model_name'}" />
+                 <filter name="field2_name_group" string="field2_name" context="{'group_by': 'field2_name'}" />
+                 <filter name="relation_search_group" string="relation search group" context="{'group_by': 'relation_search_group'}"/>
+                 <filter name="model_id_group" string="model_id_group" context="{'group_by': 'model_id'}"/>
+                        
+                        
+                 <filter name="is_active" domain="[('is_active','=',True)]"/>
+                 <separator/>
+                <filter name="is_inherit" domain="[('is_inherit','=',True)]"/>
+                 <separator/>
+                  <filter name="relation_search" string="relation_search no found" domain="[('relation_search','=','!relation No find')]"/>
+                 <separator/>
+                <filter name="relation" string="relation khác false" domain="[('relation','!=',False)]"/>
+                <separator/>
+                <filter name="field2_name" string="field2_name = !No exist" domain="[('field2_name','=', '!No exist')]"/>
+                <separator/>
+                <filter name="field1_model_name" string="field1_model_name = '! NFo field1'" domain="[('field1_model_name','=', '! NFo field1')]"/>
+                <filter name="all_active_not_active" string="all_active_not_active" domain="['|', ('active','=', False), ('active','=', True)]"/>
+                
+                 
+            </search>
+        </field>
+    </record>
+    
+    
+    
+      <record id="fields_import_action" model="ir.actions.act_window">
+         <field name="name">fields_import</field>
+         <field name="res_model">import_adj.fields_import</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="domain" />
+         <field name="context">{}</field>
+      </record>
+	</data>
+</odoo>

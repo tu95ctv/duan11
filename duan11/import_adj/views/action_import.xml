@@ -1,0 +1,85 @@
+<odoo>
+	<data>
+		<record id="action_import_form_view" model="ir.ui.view">
+         <field name="name">action_import.form</field>
+         <field name="model">import_adj.action_import</field>
+         <field name="arch" type="xml">
+            <form string="action_import">
+               <header>
+	               <!-- 
+	                  <button class="oe_highlight" type="object" string="Test_search" name="test_search"  />
+	                  <button class="oe_highlight" type="object" string="set_list_of_models" name="set_list_of_models"  />
+	                -->
+               </header>
+               <sheet>
+                  <group>
+                  		<field name="id_char"/>
+                  		<field name="name"/>
+						<field name="auto_search"/>
+						<field name="context"/>
+						<field name="domain"/>
+						<field name="filter"/>
+						<field name="groups_id"/>
+						<field name="limit"/>
+						<field name="multi"/>
+						<field name="res_id"/>
+						<field name="res_model"/>
+						<field name="search_view"/>
+						<field name="search_view_id"/>
+						<field name="src_model"/>
+						<field name="target"/>
+						<field name="type"/>
+						<field name="usage"/>
+						<field name="view_id"/>
+						<field name="view_ids"/>
+						<field name="view_mode"/>
+						<field name="view_type"/>
+						<field name="views"/>
+
+                  </group>
+               </sheet>
+            </form>
+         </field>
+      </record>
+      <record id="action_import_list_view" model="ir.ui.view">
+         <field name="name">action_import.list</field>
+         <field name="model">import_adj.action_import</field>
+         <field name="arch" type="xml">
+            <tree string="action_import">
+               <field name="name"/>
+                  		<field name="id_char"/>
+                  	 	<field name="name"/>
+						<field name="auto_search"/>
+						<field name="context"/>
+						<field name="domain"/>
+						<field name="filter"/>
+						<field name="groups_id"/>
+						<field name="limit"/>
+						<field name="multi"/>
+						<field name="res_id"/>
+						<field name="res_model"/>
+						<field name="search_view"/>
+						<field name="search_view_id"/>
+						<field name="src_model"/>
+						<field name="target"/>
+						<field name="type"/>
+						<field name="usage"/>
+						<field name="view_id"/>
+						<field name="view_ids"/>
+						<field name="view_mode"/>
+						<field name="view_type"/>
+						<field name="views"/>
+
+            </tree>
+         </field>
+      </record>
+      <record id="action_import_action" model="ir.actions.act_window">
+         <field name="name">action_import</field>
+         <field name="res_model">import_adj.action_import</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="domain" />
+         <field name="context">{}</field>
+      </record>
+	</data>
+</odoo>

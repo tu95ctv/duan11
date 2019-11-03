@@ -1,0 +1,68 @@
+<odoo>
+	<data>
+		<record id="model_import_form_view" model="ir.ui.view">
+         <field name="name">model_import.form</field>
+         <field name="model">import_adj.model_import</field>
+         <field name="arch" type="xml">
+            <form string="model_import">
+               <header>
+	               <!-- 
+	                  <button class="oe_highlight" type="object" string="Test_search" name="test_search"  />
+	                  <button class="oe_highlight" type="object" string="set_list_of_models" name="set_list_of_models"  />
+	                -->
+               </header>
+               <sheet>
+                  <group>
+                  		<field name="active"/>
+                  		<field name="id_char"/>
+						<field name="modules"/>
+						<field name="du"/>
+						<field name="model"/>
+						<field name="name"/>
+						<field name="transient"/>
+                  </group>
+               </sheet>
+            </form>
+         </field>
+      </record>
+      <record id="model_import_list_view" model="ir.ui.view">
+         <field name="name">model_import.list</field>
+         <field name="model">import_adj.model_import</field>
+         <field name="arch" type="xml">
+            <tree string="model_import">
+				<field name="model"/>
+				<field name="modules"/>
+				<field name="du"/>
+                <field name="id_char"/>
+				<field name="name"/>
+				<field name="transient"/>
+				<field name="module_goc"/>
+            </tree>
+         </field>
+      </record>
+      
+      
+      <record id="model_import_search_view" model="ir.ui.view">
+        <field name="name">import_adj.model_import.search.view</field>
+        <field name="model">import_adj.model_import</field>
+        <field name="arch" type="xml">
+            <search string="model import">
+                <field name="model" />
+                <filter name="all_active_not_active" string="all_active_not_active" domain="['|', ('active','=', False), ('active','=', True)]"/>
+            </search>
+        </field>
+    </record>
+    
+    
+    
+    
+      <record id="model_import_action" model="ir.actions.act_window">
+         <field name="name">model_import</field>
+         <field name="res_model">import_adj.model_import</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="domain" />
+         <field name="context">{}</field>
+      </record>
+	</data>
+</odoo>

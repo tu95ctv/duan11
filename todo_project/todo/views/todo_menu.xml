@@ -1,0 +1,6 @@
+<odoo>
+  <data>
+     <menuitem name="Todo" id="menu_todo_root" groups="todo.group_todo_user" web_icon="todo,static/description/icon.png" />
+   	 <menuitem id="menu_todo" name="Todo" parent="menu_todo_root" action="todo.todo_action"  groups="todo.group_todo_user" />
+  </data>
+</odoo>

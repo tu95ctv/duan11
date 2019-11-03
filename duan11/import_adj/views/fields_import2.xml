@@ -1,0 +1,47 @@
+<odoo>
+	<data>
+		
+      <record id="fields_import_list_view2" model="ir.ui.view">
+         <field name="name">fields_import.list</field>
+         <field name="priority">15</field>
+         <field name="model">import_adj.fields_import</field>
+         <field name="arch" type="xml">
+            <tree string="fields_import">
+						<field name="ttype"/>
+                  	 	<field name="id_char"/>
+                  	 	<field name="name"/>
+						<field name="model_id" string="model_id"/>
+						<field name="model_name" string="model name"/>
+						<field name="model_name_look" string="model_look0"/>
+						<field name="model_look1"/>
+						<field name="model_look2"/>
+						<field name="model_look_sum"/>
+						<field name="app_of_model"/>
+						<field name="related"/>
+						<field name="field1_model_name"/>
+						<field name="field2" string="field2 tách"/>
+						<field name="field2_name" string="field2_search"/>
+						<field name="relation"/>
+						<field name="relation_search"/>
+						<field name="relation_field"/>
+						<field name="relation_table"/>
+						<field name="is_inherit"/>
+                  	 	
+            </tree>
+         </field>
+      </record>
+      
+       
+    
+    
+    
+      <record id="fields_import_action" model="ir.actions.act_window">
+         <field name="name">fields_import</field>
+         <field name="res_model">import_adj.fields_import</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="domain" />
+         <field name="context">{}</field>
+      </record>
+	</data>
+</odoo>

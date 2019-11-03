@@ -1,0 +1,553 @@
+<odoo>
+    <data>
+    <record id="tour_travel.act_tour_date_2_attendee" model="ir.actions.act_window">
+         <field name="name">Attendee</field>
+         <field name="res_model">res.partner</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[]</field>
+        <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.attendee_declaration" model="ir.actions.act_window">
+         <field name="name">Attendee Declaration</field>
+         <field name="res_model">report.attendee.declaration</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[]</field>
+        <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.act_tour_date_2_account_analytic" model="ir.actions.act_window">
+         <field name="name">Costs &amp; Revenues</field>
+         <field name="res_model">account.analytic.line</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[]</field>
+        <field name="context">{'search_default_group_date': 1,
+				'search_default_group_journal': 1}</field>
+
+         
+      </record>
+<record id="tour_travel.tour_date_2_account_analytic_action" model="ir.actions.act_window">
+         <field name="name">Costs &amp; Revenues</field>
+         <field name="res_model">account.analytic.line</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[('account_id','=', analytic_account_id)]</field>
+        <field name="context">{'search_default_group_date': 1,
+				'search_default_group_journal': 1, 'default_account_id':
+				context.get('analytic_account_id')}</field>
+
+         
+      </record>
+<record id="tour_travel.destination_action" model="ir.actions.act_window">
+         <field name="name">Destinations</field>
+         <field name="res_model">destination</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.document_type_action" model="ir.actions.act_window">
+         <field name="name">Document Type</field>
+         <field name="res_model">document.type</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.hotel_action" model="ir.actions.act_window">
+         <field name="name">Hotel Information</field>
+         <field name="res_model">hotel.hotel</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.hotel_reservation_action" model="ir.actions.act_window">
+         <field name="name">Hotel Reservation</field>
+         <field name="res_model">hotel.reservation</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.hotel_class_action" model="ir.actions.act_window">
+         <field name="name">Hotel Type</field>
+         <field name="res_model">hotel.class</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.act_tour_date_2_lead" model="ir.actions.act_window">
+         <field name="name">Leads</field>
+         <field name="res_model">crm.lead</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[('state', 'in', ('draft', 'sent'))]</field>
+        <field name="context">{'search_default_tour_date_id': active_id,
+				'default_is_tour_booking':1}</field>
+
+         
+      </record>
+<record id="tour_travel.passport_action" model="ir.actions.act_window">
+         <field name="name">Passport</field>
+         <field name="res_model">passport</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.passport_booking_action" model="ir.actions.act_window">
+         <field name="name">Passport Booking</field>
+         <field name="res_model">passport.booking</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.act_tour_date_2_purchase_order" model="ir.actions.act_window">
+         <field name="name">Purchase Order</field>
+         <field name="res_model">purchase.order</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[('state', 'not in', ('draft', 'sent', 'bid',
+				'cancel'))]</field>
+        <field name="context">{'search_default_tour_date_id': active_id}</field>
+
+         
+      </record>
+<record id="tour_travel.act_tour_date_2_tour_quotation" model="ir.actions.act_window">
+         <field name="name">Quotation</field>
+         <field name="res_model">sale.order</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[('state', 'in', ('draft', 'sent'))]</field>
+        <field name="context">{'search_default_tour_date_id': active_id,
+				'default_is_tour_booking':1}</field>
+
+         
+      </record>
+<record id="tour_travel.tour_quotation_action" model="ir.actions.act_window">
+         <field name="name">Quotations</field>
+         <field name="res_model">sale.order</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[('state','in',('draft','sent','cancel')),
+				('is_tour_booking','=',True)]</field>
+        <field name="context">{'search_default_is_tour_booking':
+				1,'default_is_tour_booking':
+				1}</field>
+
+         
+      </record>
+<record id="tour_travel.act_tour_date_2_rfq" model="ir.actions.act_window">
+         <field name="name">Requests for Quotation</field>
+         <field name="res_model">purchase.order</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[('state', 'in', ('draft', 'sent', 'bid'))]</field>
+        <field name="context">{'search_default_tour_date_id': active_id}</field>
+
+         
+      </record>
+<record id="tour_travel.act_tour_date_2_tour_booking" model="ir.actions.act_window">
+         <field name="name">Tour Booking</field>
+         <field name="res_model">sale.order</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
+        <field name="context">{'search_default_tour_date_id': active_id,
+				'default_is_tour_booking':1}</field>
+
+         
+      </record>
+<record id="tour_travel.tour_booking_action" model="ir.actions.act_window">
+         <field name="name">Tour Booking</field>
+         <field name="res_model">sale.order</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel')),
+				('is_tour_booking','=',True)]</field>
+        <field name="context">{'search_default_is_tour_booking':
+				1,'default_is_tour_booking':
+				1}</field>
+
+         
+      </record>
+<record id="tour_travel.tour_date_action" model="ir.actions.act_window">
+         <field name="name">Tour Date</field>
+         <field name="res_model">tour.date</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.tour_program_action" model="ir.actions.act_window">
+         <field name="name">Tour Program</field>
+         <field name="res_model">tour.program</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.tour_action" model="ir.actions.act_window">
+         <field name="name">Tours</field>
+         <field name="res_model">product.template</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[('specific', '=', 'tour')]</field>
+        <field name="context">{'search_default_specific':
+				'tour','default_specific': 'tour','default_type': 'service'}</field>
+
+         
+      </record>
+<record id="tour_travel.tour_type_action" model="ir.actions.act_window">
+         <field name="name">Tour Type</field>
+         <field name="res_model">tour.type</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.tour_variant_action" model="ir.actions.act_window">
+         <field name="name">Tour Variants</field>
+         <field name="res_model">product.product</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[('specific', '=', 'tour')]</field>
+        <field name="context">{'search_default_specific':
+				'tour','default_specific': 'tour','default_type': 'service'}</field>
+
+         
+      </record>
+<record id="tour_travel.transport_action" model="ir.actions.act_window">
+         <field name="name">Transport</field>
+         <field name="res_model">transport</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.visa_action" model="ir.actions.act_window">
+         <field name="name">Visa</field>
+         <field name="res_model">visa</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.visa_booking_action" model="ir.actions.act_window">
+         <field name="name">Visa Booking</field>
+         <field name="res_model">visa.booking</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.visa_type_action" model="ir.actions.act_window">
+         <field name="name">Visa Type</field>
+         <field name="res_model">visa.type</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.act_tour_date_2_attendee" model="ir.actions.act_window">
+         <field name="name">Attendee</field>
+         <field name="res_model">res.partner</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="view_id" ref ="tour_travel.tour_date_attendee_tree_view"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.attendee_declaration" model="ir.actions.act_window">
+         <field name="name">Attendee Declaration</field>
+         <field name="res_model">report.attendee.declaration</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[]</field>
+        <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.act_tour_date_2_account_analytic" model="ir.actions.act_window">
+         <field name="name">Costs &amp; Revenues</field>
+         <field name="res_model">account.analytic.line</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[]</field>
+        <field name="context">{'search_default_group_date': 1,
+				'search_default_group_journal': 1}</field>
+
+         
+      </record>
+<record id="tour_travel.tour_date_2_account_analytic_action" model="ir.actions.act_window">
+         <field name="name">Costs &amp; Revenues</field>
+         <field name="res_model">account.analytic.line</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="view_id" ref ="analytic.view_account_analytic_line_tree"/>
+        <field name="domain">[('account_id','=', analytic_account_id)]</field>
+        <field name="context">{'search_default_group_date': 1,
+				'search_default_group_journal': 1, 'default_account_id':
+				context.get('analytic_account_id')}</field>
+
+         
+      </record>
+<record id="tour_travel.destination_action" model="ir.actions.act_window">
+         <field name="name">Destinations</field>
+         <field name="res_model">destination</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.document_type_action" model="ir.actions.act_window">
+         <field name="name">Document Type</field>
+         <field name="res_model">document.type</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.hotel_action" model="ir.actions.act_window">
+         <field name="name">Hotel Information</field>
+         <field name="res_model">hotel.hotel</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.hotel_reservation_action" model="ir.actions.act_window">
+         <field name="name">Hotel Reservation</field>
+         <field name="res_model">hotel.reservation</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.hotel_class_action" model="ir.actions.act_window">
+         <field name="name">Hotel Type</field>
+         <field name="res_model">hotel.class</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.act_tour_date_2_lead" model="ir.actions.act_window">
+         <field name="name">Leads</field>
+         <field name="res_model">crm.lead</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[('state', 'in', ('draft', 'sent'))]</field>
+        <field name="context">{'search_default_tour_date_id': active_id,
+				'default_is_tour_booking':1}</field>
+
+         
+      </record>
+<record id="tour_travel.passport_action" model="ir.actions.act_window">
+         <field name="name">Passport</field>
+         <field name="res_model">passport</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.passport_booking_action" model="ir.actions.act_window">
+         <field name="name">Passport Booking</field>
+         <field name="res_model">passport.booking</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.act_tour_date_2_purchase_order" model="ir.actions.act_window">
+         <field name="name">Purchase Order</field>
+         <field name="res_model">purchase.order</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[('state', 'not in', ('draft', 'sent', 'bid',
+				'cancel'))]</field>
+        <field name="context">{'search_default_tour_date_id': active_id}</field>
+
+         
+      </record>
+<record id="tour_travel.act_tour_date_2_tour_quotation" model="ir.actions.act_window">
+         <field name="name">Quotation</field>
+         <field name="res_model">sale.order</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[('state', 'in', ('draft', 'sent'))]</field>
+        <field name="context">{'search_default_tour_date_id': active_id,
+				'default_is_tour_booking':1}</field>
+
+         
+      </record>
+<record id="tour_travel.tour_quotation_action" model="ir.actions.act_window">
+         <field name="name">Quotations</field>
+         <field name="res_model">sale.order</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="view_id" ref ="sale.view_quotation_tree"/>
+        <field name="search_view_id" ref ="sale.view_sales_order_filter"/>
+        <field name="domain">[('state','in',('draft','sent','cancel')),
+				('is_tour_booking','=',True)]</field>
+        <field name="context">{'search_default_is_tour_booking':
+				1,'default_is_tour_booking':
+				1}</field>
+
+         
+      </record>
+<record id="tour_travel.act_tour_date_2_rfq" model="ir.actions.act_window">
+         <field name="name">Requests for Quotation</field>
+         <field name="res_model">purchase.order</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[('state', 'in', ('draft', 'sent', 'bid'))]</field>
+        <field name="context">{'search_default_tour_date_id': active_id}</field>
+
+         
+      </record>
+<record id="tour_travel.act_tour_date_2_tour_booking" model="ir.actions.act_window">
+         <field name="name">Tour Booking</field>
+         <field name="res_model">sale.order</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
+        <field name="context">{'search_default_tour_date_id': active_id,
+				'default_is_tour_booking':1}</field>
+
+         
+      </record>
+<record id="tour_travel.tour_booking_action" model="ir.actions.act_window">
+         <field name="name">Tour Booking</field>
+         <field name="res_model">sale.order</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="search_view_id" ref ="sale.view_sales_order_filter"/>
+        <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel')),
+				('is_tour_booking','=',True)]</field>
+        <field name="context">{'search_default_is_tour_booking':
+				1,'default_is_tour_booking':
+				1}</field>
+
+         
+      </record>
+<record id="tour_travel.tour_date_action" model="ir.actions.act_window">
+         <field name="name">Tour Date</field>
+         <field name="res_model">tour.date</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.tour_program_action" model="ir.actions.act_window">
+         <field name="name">Tour Program</field>
+         <field name="res_model">tour.program</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.tour_action" model="ir.actions.act_window">
+         <field name="name">Tours</field>
+         <field name="res_model">product.template</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="domain">[('specific', '=', 'tour')]</field>
+        <field name="context">{'search_default_specific':
+				'tour','default_specific': 'tour','default_type': 'service'}</field>
+
+         
+      </record>
+<record id="tour_travel.tour_type_action" model="ir.actions.act_window">
+         <field name="name">Tour Type</field>
+         <field name="res_model">tour.type</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.tour_variant_action" model="ir.actions.act_window">
+         <field name="name">Tour Variants</field>
+         <field name="res_model">product.product</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="view_id" ref ="product.product_product_tree_view"/>
+        <field name="search_view_id" ref ="product.product_search_form_view"/>
+        <field name="domain">[('specific', '=', 'tour')]</field>
+        <field name="context">{'search_default_specific':
+				'tour','default_specific': 'tour','default_type': 'service'}</field>
+
+         
+      </record>
+<record id="tour_travel.transport_action" model="ir.actions.act_window">
+         <field name="name">Transport</field>
+         <field name="res_model">transport</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.visa_action" model="ir.actions.act_window">
+         <field name="name">Visa</field>
+         <field name="res_model">visa</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.visa_booking_action" model="ir.actions.act_window">
+         <field name="name">Visa Booking</field>
+         <field name="res_model">visa.booking</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+<record id="tour_travel.visa_type_action" model="ir.actions.act_window">
+         <field name="name">Visa Type</field>
+         <field name="res_model">visa.type</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+                 <field name="context">{}</field>
+
+         
+      </record>
+    </data>
+</odoo>

@@ -1,0 +1,1867 @@
+<odoo>
+    <data>
+    <record id="tour_travel.attendee_declaration_form_view" model="ir.ui.view">
+         <field name="name">attendee.declaration.form</field>
+         <field name="model">report.attendee.declaration</field>
+         <field name="type">form</field>
+         <field name="priority">8</field>
+         <field name="arch" type="xml"><form string="Attendee Declaration">
+					<group>
+						<field name="is_ascii"/>
+					</group>
+					<footer>
+                    <button name="print_report" string="Print" type="object" default_focus="1" class="oe_highlight"/>
+                    or 
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.hotel_reservation_form_view" model="ir.ui.view">
+         <field name="name">hotel.reservation.form</field>
+         <field name="model">hotel.reservation</field>
+         <field name="type">form</field>
+         <field name="priority">8</field>
+         <field name="arch" type="xml"><form string="Hotel Reservation">
+                    <header>
+                        <button name="action_send" type="object" states="draft" string="Sent to Hotel" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+                        <button name="action_send" type="object" states="sent" string="Sent to Hotel" groups="tour_travel.group_tour_travel_manager"/>
+                        <button name="action_book" type="object" states="draft,sent" string="Book" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+                        <button name="action_confirm" type="object" states="book" string="Confirm" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+                        <button name="action_check_out" type="object" states="confirm" string="Check out" class="oe_highlight"/>
+                        <button name="action_cancel" type="object" states="draft,book,sent" string="Cancel" groups="tour_travel.group_tour_travel_manager"/>
+                        <button name="action_done" type="object" states="check_out" string="Done" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+                        <button name="action_draft" type="object" states="cancel" string="Set to Draft" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+                        <field name="state" readonly="1" statusbar_visible="draft,book,confirm,check_out,done" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <label string="Request for Quotation " attrs="{'invisible': [('state','not in',('draft','sent','cancel'))]}"/>
+                                <label string="Reservation Order " attrs="{'invisible': [('state','in',('draft','sent','cancel'))]}"/>
+                                <field name="name" class="oe_inline" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="hotel_id"/>
+                                <field name="supplier_ref"/>
+                                <field name="pricelist_id" domain="[('type','=','purchase')]" groups="product.group_sale_pricelist"/>
+                                <field name="currency_id" groups="base.group_multi_currency"/>
+                                <field name="user_id"/>
+                            </group>
+                            <group>
+                                <field name="date_order"/>
+                                <field name="tour_date_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Room Types">
+                                <field name="reservation_line">
+                                    <tree string="Hotel Reservation Lines" editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="name"/>
+                                        <field name="check_in_date"/>
+                                        <field name="check_out_date"/>
+                                        <field name="no_of_day"/>
+                                        <field name="no_of_room"/>
+                                        <field name="price"/>
+                                        <field name="tax_ids" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
+                                        <field name="price_subtotal"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <div class="oe_subtotal_footer_separator oe_inline">
+                                        <label for="amount_total"/>
+                                        <button name="button_dummy" states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
+                                    </div>
+                                    <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                                <div class="oe_clear"/>
+                                <field name="notes" class="oe_inline" placeholder="Terms and conditions..."/>
+                            </page>
+                            <page string="Orders &amp; Invoices" attrs="{'invisible': [('state', 'not in', ('confirm', 'check_out', 'done'))]}">
+                            	<separator string="Purchase Order"/>
+                            	<field name="purchase_order_ids"/>
+                            	<separator string="Invoices"/>
+                            	<field name="invoice_ids"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+         </field>
+</record>
+<record id="tour_travel.tour_date_form_view" model="ir.ui.view">
+         <field name="name">tour.date.form</field>
+         <field name="model">tour.date</field>
+         <field name="type">form</field>
+         <field name="priority">8</field>
+         <field name="arch" type="xml"><form string="Tour Date">
+					<header>
+						<button name="action_open" type="object" states="draft" string="Open Tour Date" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="action_start" type="object" states="open" string="Start Tour Date" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="action_cancel" type="object" states="open" string="Cancel" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="action_done" type="object" states="start" string="Finish" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="action_draft" type="object" states="cancel" string="Set to Draft" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<field name="state" readonly="1" statusbar_visible="draft,confirm,start,done" widget="statusbar"/>
+					</header>
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button class="oe_inline oe_stat_button" type="action" name="279" context="{'search_default_tour_date_id': active_id}" icon="fa-star">
+								<field string="Leads" name="lead_count" widget="statinfo"/>
+							</button>
+							<button class="oe_inline oe_stat_button" type="action" name="280" context="{'search_default_tour_date_id': active_id}" icon="fa-star">
+								<field string="Opportunities" name="oppor_count" widget="statinfo"/>
+							</button>
+							<button class="oe_inline oe_stat_button" type="action" name="414" icon="fa-strikethrough">
+								<field string="Quotations" name="tour_quotation_count" widget="statinfo"/>
+							</button>
+							<button class="oe_inline oe_stat_button" type="action" name="413" icon="fa-strikethrough">
+								<field string="Tour Bookings" name="tour_booking_count" widget="statinfo"/>
+							</button>
+							<button class="oe_inline oe_stat_button" name="action_view_attendee" type="object" icon="fa-user">
+								<field string="Attendees" name="attendee_count" widget="statinfo"/>
+							</button>
+							<button class="oe_inline oe_stat_button" type="action" name="416" icon="fa-shopping-cart">
+								<field string="RFQs" name="rfq_count" widget="statinfo"/>
+							</button>
+							<button class="oe_inline oe_stat_button" name="415" type="action" icon="fa-shopping-cart">
+								<field string="Purchases" name="purchase_order_count" widget="statinfo"/>
+							</button>
+							 <button class="oe_stat_button" type="action" name="419" icon="fa-usd" string="Cost/Revenue" widget="statinfo" attrs="{'invisible': [('analytic_account_id', '=', False)]}" context="{'analytic_account_id': analytic_account_id}" groups="tour_travel.group_tour_travel_manager"/>
+						</div>
+						<div class="oe_title">
+							<label for="name" class="oe_edit_only" string="Code"/>
+							<h1>
+								<field name="name" readonly="1"/>
+							</h1>
+						</div>
+						<group>
+							<group>
+								<field name="tour_id" context="{'search_default_specific':'tour','default_specific':'tour','default_type': 'service'}"/>
+								<field name="tour_type"/>
+								<field name="total_seat"/>
+								<field name="available_seat"/>
+							</group>
+							<group>
+								<field name="duration"/>
+								<field name="start_date"/>
+								<field name="end_date" invisible="1"/>
+								<field name="book_date"/>
+								<field name="analytic_account_id"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Tour Variants">
+								<field name="tour_variant_ids" nolabel="1">
+									<tree string="Tour Variants" editable="bottom">
+										<field name="product_id" domain="[('product_tmpl_id','=',parent.tour_id)]"/>
+										<field name="name"/>
+										<field name="price"/>
+										<field name="qty_booked"/>
+										<field name="uom_id"/>
+									</tree>
+								</field>
+								<field name="description" placeholder="describe the tour date..."/>
+							</page>
+							<page string="Programs">
+								<field name="tour_date_program_ids">
+									<tree string="Tour Programs" editable="bottom">
+										<field name="day"/>
+										<field name="tour_program_id"/>
+										<field name="breakfast"/>
+										<field name="lunch"/>
+										<field name="dinner"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Destinations">
+								<field name="tour_date_destination_ids">
+									<tree string="Tour Date Destination">
+										<field name="destination_id"/>
+										<field name="city"/>
+										<field name="state_id"/>
+										<field name="country_id"/>
+										<field name="days"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Transports">
+								<field name="tour_date_transport_ids">
+									<tree string="Tour Date Transport">
+										<field name="from_destination"/>
+										<field name="to_destination"/>
+										<field name="transport_id"/>
+										<field name="carrier_id"/>
+										<field name="carrier_line"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Hotels">
+								<field name="tour_date_hotel_ids">
+									<tree string="Hotel Information">
+										<field name="hotel_class_id"/>
+										<field name="hotel_id"/>
+										<field name="room_id"/>
+										<field name="days"/>
+										<field name="auto_booking" invisible="1"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Gifts &amp; Other Inclusion">
+								<field name="tour_date_product_ids">
+									<tree string="Products" editable="bottom">
+										<field name="product_id"/>
+										<field name="name"/>
+										<field name="product_uom_qty"/>
+										<field name="product_uom" groups="product.group_uom"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+						<field name="message_ids" widget="mail_thread"/>
+					</div>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.tour_date_transport_form_view" model="ir.ui.view">
+         <field name="name">tour.date.transport.form</field>
+         <field name="model">tour.date.transport</field>
+         <field name="type">form</field>
+         <field name="priority">8</field>
+         <field name="arch" type="xml"><form string="Tour Date Transport">
+					<group>
+						<group>
+							<field name="from_destination"/>
+							<field name="to_destination"/>
+							<field name="time"/>
+							<field name="distance"/>
+						</group>
+						<group>
+							<field name="transport_id"/>
+							<field name="carrier_id"/>
+							<field name="carrier_line" context="{'search_default_specific':'transport','default_specific':'transport'}"/>
+							<field name="product_name" invisible="1"/>
+						</group>
+					</group>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.tour_destination_line_form_view" model="ir.ui.view">
+         <field name="name">tour.destination.form</field>
+         <field name="model">tour.destination</field>
+         <field name="type">form</field>
+         <field name="priority">8</field>
+         <field name="arch" type="xml"><form string="Tour Destination">
+					<group>
+						<group>
+							<field name="destination_id"/>
+							<field name="city"/>
+							<field name="state_id"/>
+							<field name="country_id"/>
+						</group>
+						<group>
+							<field name="days"/>
+						</group>
+					</group>
+					<separator string="Hotel Information"/>
+					<field name="hotel_ids">
+						<tree string="Tour Destination" editable="bottom">
+							<field name="hotel_class_id"/>
+							<field name="hotel_id" domain="[('hotel_class_id','=',hotel_class_id)]"/>
+							<field name="room_id" domain="[('hotel_id','=',hotel_id)]"/>
+							<field name="days"/>
+							<field name="auto_booking" invisible="1"/>
+						</tree>
+					</field>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.transport_form_view" model="ir.ui.view">
+         <field name="name">transport.form</field>
+         <field name="model">transport</field>
+         <field name="type">form</field>
+         <field name="priority">8</field>
+         <field name="arch" type="xml"><form string="Transport Provider">
+					<sheet>
+						<group>
+							<group>
+								<field name="partner_id" context="{'search_default_is_transport':1,'default_is_transport':1,'default_supplier':1,'default_customer':0}"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Carriers Information">
+								<field name="transport_line"/>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+						<field name="message_ids" widget="mail_thread"/>
+					</div>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.transport_line_form_view" model="ir.ui.view">
+         <field name="name">transport.line.form</field>
+         <field name="model">transport.line</field>
+         <field name="type">form</field>
+         <field name="priority">8</field>
+         <field name="arch" type="xml"><form string="Transport Line">
+					<sheet>
+						<group>
+							<field name="transport_carrier_id" context="{'search_default_supplier':True,'default_supplier':True,'search_default_customer':False,'default_customer':False}"/>
+						</group>
+						<notebook>
+							<page string="Products">
+								<field name="carrier_line">
+									<tree string="Transport Carrier Line" editable="bottom">
+										<field name="product_id" context="{'search_default_specific':'transport','default_specific':'transport'}"/>
+										<field name="description"/>
+										<field name="cost_price"/>
+										<field name="sale_price"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.visa_form_view" model="ir.ui.view">
+         <field name="name">visa.form</field>
+         <field name="model">visa</field>
+         <field name="type">form</field>
+         <field name="priority">8</field>
+         <field name="arch" type="xml"><form string="Visa">
+					<header>
+						<button name="action_expire" string="Force to expire" type="object" states="available" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<field name="state" readonly="1" statusbar_visible="available, expire" widget="statusbar"/>
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="name"/>
+								<field name="issue_date"/>
+								<field name="expiry_date"/>
+							</group>
+							<group>
+								<field name="country_id"/>
+								<field name="type_id"/>
+								<field name="partner_id" context="{'search_default_customer':1,'default_customer':1,'search_default_is_company':0,'default_is_company':0}"/>
+								<field name="passport_id" domain="['&amp;',('partner_id','=',partner_id),('state','=','available')]"/>
+							</group>							
+						</group>
+						<separator string="Image"/>
+						<field name="visa_img" img_width="100%" img_height="auto" width="100%" widget="image"/>
+					</sheet>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.visa_type_form_view" model="ir.ui.view">
+         <field name="name">visa.type.form</field>
+         <field name="model">visa.type</field>
+         <field name="type">form</field>
+         <field name="priority">8</field>
+         <field name="arch" type="xml"><form string="Visa Type">
+					<sheet>
+						<group>
+							<group>
+								<field name="name"/>
+							</group>
+							<group>
+								<field name="duration"/>
+								<!-- <field name="limit_date" invisible="1" /> -->
+							</group>
+						</group>
+					</sheet>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.tour_account_move_inherit_form" model="ir.ui.view">
+         <field name="name">account.move.inheirt.form</field>
+         <field name="model">account.move</field>
+         <field name="type">form</field><field name="inherit_id" ref="account.view_move_form"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><field name="journal_id" position="after">                    
+                    <field name="tour_date_id"/>
+                </field>
+         </field>
+</record>
+<record id="tour_travel.destination_form_view" model="ir.ui.view">
+         <field name="name">destination.form</field>
+         <field name="model">destination</field>
+         <field name="type">form</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><form string="Tour Destination">
+					<sheet>
+						<group>
+							<group>
+								<field name="name"/>
+								<field name="code"/>
+							</group>
+							<group>
+								<field name="city"/>
+								<field name="state_id"/>
+								<field name="country_id"/>
+							</group>
+						</group>					
+					</sheet>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.destination_tree_view" model="ir.ui.view">
+         <field name="name">destination.tree</field>
+         <field name="model">destination</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Destinations">
+					<field name="name"/>
+					<field name="code"/>
+					<field name="city"/>
+					<field name="state_id"/>
+					<field name="country_id"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.document_type_form_view" model="ir.ui.view">
+         <field name="name">document.type.form</field>
+         <field name="model">document.type</field>
+         <field name="type">form</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><form string="Document Type">
+					<sheet>
+						<group>
+							<group>
+								<field name="name"/>
+							</group>
+						</group>
+						<separator string="Description"/>
+						<field name="description"/>
+					</sheet>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.document_type_tree_view" model="ir.ui.view">
+         <field name="name">document.type.tree</field>
+         <field name="model">document.type</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Document Type">
+					<field name="name"/>
+					<field name="description"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.hotel_class_form_view" model="ir.ui.view">
+         <field name="name">hotel.class.form</field>
+         <field name="model">hotel.class</field>
+         <field name="type">form</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><form string="Hotel Type">
+					<sheet>
+						<group>
+							<group>
+								<field name="name"/>								
+							</group>
+							<group>
+								<field name="description"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.hotel_class_tree_view" model="ir.ui.view">
+         <field name="name">hotel.class.tree</field>
+         <field name="model">hotel.class</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Hotel Class">
+					<field name="name"/>
+					<field name="description"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.hotel_form_view" model="ir.ui.view">
+         <field name="name">hotel.form</field>
+         <field name="model">hotel.hotel</field>
+         <field name="type">form</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><form string="Hotel Information">
+					<sheet>
+						<group>
+							<group>
+								<field name="partner_id" context="{'search_default_is_hotel':1,'default_is_hotel':1,'default_supplier':1,'default_customer':0}"/>
+							</group>
+							<group>
+								<field name="hotel_class_id"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Room Information">
+								<field name="hotel_room_ids">
+									<tree string="Room Information" editable="bottom">
+										<field name="room_type_id" context="{'search_default_specific':'room','default_specific':'room'}"/>
+										<field name="description"/>
+										<field name="cost_price"/>
+										<field name="sale_price"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Service Information">
+								<field name="hotel_service_ids">
+									<tree string="Service Information" editable="bottom">
+										<field name="service_id"/>
+										<field name="description"/>
+										<field name="cost_price"/>
+										<field name="product_uom"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Hotel Images">
+								<group col="6">
+									<group col="2">
+										<field name="hotel_img1" img_width="200" img_height="200" width="200" widget="image" nolabel="1"/>
+									</group>
+									<group col="2">
+										<field name="hotel_img2" img_width="200" img_height="200" width="200" widget="image" nolabel="1"/>
+									</group>
+									<group col="2">
+										<field name="hotel_img3" img_width="200" img_height="200" width="200" widget="image" nolabel="1"/>
+									</group>
+								</group>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+						<field name="message_ids" widget="mail_thread"/>
+					</div>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.hotel_reservation_search_view" model="ir.ui.view">
+         <field name="name">hotel.reservation.search</field>
+         <field name="model">hotel.reservation</field>
+         <field name="type">search</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><search string="Search Hotel Reservation">
+                    <field name="name" string="Reservation No." filter_domain="['|',('name','ilike',self),('supplier_ref','ilike',self)]"/>
+                    <field name="hotel_id"/>
+                    <field name="tour_date_id"/>
+                    <field name="user_id"/>
+                    <filter string="My" domain="[('user_id','=',uid)]" name="my_hotel_reservation_filter"/>
+                    <separator/>
+                    <filter string="Booked" name="booked" domain="[('state','=','book')]"/>
+                    <filter string="Checked Out" name="checkout" domain="[('state','=','check_out')]"/>                    
+                    <filter string="Done" domain="[('state','=','done')]"/>
+                    <separator/>
+                    <filter string="Cancelled" domain="[('state','=','cancel')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Responsible" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Supplier" domain="[]" context="{'group_by':'hotel_id'}"/>
+                        <filter string="Tour Date" domain="[]" context="{'group_by':'tour_date_id'}"/>
+                    </group>
+               </search>
+         </field>
+</record>
+<record id="tour_travel.hotel_reservation_tree_view" model="ir.ui.view">
+         <field name="name">hotel.reservation.tree</field>
+         <field name="model">hotel.reservation</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Hotel Reservation" colors="grey:state=='cancel';blue:state=='draft';red:state=='except_invoice';black:state in ('sent', 'book', 'check_out')">
+                    <field name="name"/>
+                    <field name="date_order"/>
+                    <field name="hotel_id"/>
+                    <field name="tour_date_id"/>
+                    <field name="state"/>
+                </tree>
+         </field>
+</record>
+<record id="tour_travel.hotel_room_form_view" model="ir.ui.view">
+         <field name="name">hotel.room.form</field>
+         <field name="model">hotel.room</field>
+         <field name="type">form</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><form string="Room Type">
+					<group>
+						<group>
+							<field name="room_type_id"/>
+							<field name="hotel_id"/>
+							<field name="description"/>
+						</group>
+						<group>
+							<field name="cost_price"/>
+							<field name="sale_price"/>
+						</group>						
+					</group>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.hotel_search_view" model="ir.ui.view">
+         <field name="name">hotel.search</field>
+         <field name="model">hotel.hotel</field>
+         <field name="type">search</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><search string="Search">
+					<field name="name" string="Name" filter_domain="[()]"/>
+					<separator/>
+					<group expand="0" string="Group By...">
+						<filter string="Type" domain="[]" context="{'group_by':'hotel_class_id'}"/>
+					</group>
+				</search>
+         </field>
+</record>
+<record id="tour_travel.hotel_tree_view" model="ir.ui.view">
+         <field name="name">hotel.tree</field>
+         <field name="model">hotel.hotel</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Hotel Information">
+					<field name="partner_id"/>
+					<field name="hotel_class_id"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.ir_attachment_inherit_form_view" model="ir.ui.view">
+         <field name="name">ir.attachment.inherit.form</field>
+         <field name="model">ir.attachment</field>
+         <field name="type">form</field><field name="inherit_id" ref="base.view_attachment_form"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><field name="type" position="before">
+					<field name="document_type_id"/>
+				</field>
+         </field>
+</record>
+<record id="tour_travel.passport_booking_calendar_view" model="ir.ui.view">
+         <field name="name">passport.booking.calendar</field>
+         <field name="model">passport.booking</field>
+         <field name="type">calendar</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><calendar string="Passport Booking" color="customer_id" date_start="current_date">
+					<field name="customer_id"/>
+					<field name="price"/>
+				</calendar>
+         </field>
+</record>
+<record id="tour_travel.passport_booking_form_view" model="ir.ui.view">
+         <field name="name">passport.booking.form</field>
+         <field name="model">passport.booking</field>
+         <field name="type">form</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><form string="Passport Booking">
+					<header>
+						<button name="confirm" string="Confirm" type="object" states="draft" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="verify" string="Verify Document" type="object" states="confirm" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="approve" string="Approve By Officer" type="object" states="verify" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="cancel" string="Cancel" type="object" states="confirm,verify" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="issue_passport" string="Issue Passport" type="object" states="approve" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<field name="state" readonly="1" statusbar_visible="draft, confirm, verify, approve, done" widget="statusbar"/>
+					</header>
+					<sheet>
+						<div class="oe_title">
+                            <label for="name" class="oe_edit_only" string="Booking ID"/>
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+						<group>
+							<group string="Booking Information">
+								<field name="customer_id" context="{'search_default_customer':1,'default_customer':1,'search_default_is_company':0,'default_is_company':0}"/>
+								<field name="pricelist_id"/>
+								<field name="currency_id" groups="base.group_multi_currency"/>
+								<field name="email"/>
+								<field name="mobile"/>
+								<field name="current_date"/>
+								<field name="user_id"/>
+							</group>
+							<group string="Passport Information">
+								<field name="holder_id"/>
+								<field name="passport_number" attrs="{'readonly': [('state','in',('draft','confirm','verify','done','cancel'))], 'required': [('state','=','approve')]}"/>
+								<field name="issue_date" attrs="{'readonly': [('state','in',('draft','confirm','verify','done','cancel'))], 'required': [('state','=','approve')]}"/>
+								<field name="expiry_date" attrs="{'readonly': [('state','in',('draft','confirm','verify','done','cancel'))], 'required': [('state','=','approve')]}"/>
+								<field name="product_id" context="{'search_default_sale_ok':1,'default_sale_ok':1,'search_default_type':'service','default_type':'service'}"/>
+								<field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Required Documents">
+								<field name="document_ids">
+									<tree string="Document Information" editable="bottom">
+										<field name="tour_document_type_id"/>
+										<field name="name"/>
+										<field name="original_copy"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Attachments">
+								<field name="attachment_ids">
+									<tree string="Attachments">
+										<field name="name"/>
+										<field name="datas_fname"/>
+										<field name="document_type_id"/>
+										<field name="type"/>
+										<field name="company_id" groups="base.group_multi_company"/>
+										<field name="create_uid"/>
+										<field name="create_date"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Sales Order &amp; Invoices">
+								<separator string="Sales Order"/>
+								<field name="sale_order_ids"/>
+								<separator string="Invoices"/>
+								<field name="invoice_ids">
+									<tree string="Invoice">
+										<field name="partner_id" groups="base.group_user"/>
+										<field name="commercial_partner_id" invisible="1"/>
+										<field name="date_invoice"/>
+										<field name="number"/>
+										<field name="reference" invisible="1"/>
+										<field name="name" invisible="1"/>
+										<field name="journal_id" invisible="1"/>
+										<field name="company_id" groups="base.group_multi_company" widget="selection"/>
+										<field name="user_id" string="Responsible" invisible="1"/>
+										<field name="date_due"/>
+										<field name="origin" invisible="1"/>
+										<field name="currency_id" groups="base.group_multi_currency"/>
+										<field name="residual" sum="Residual Amount"/>
+										<field name="amount_untaxed" sum="Untaxed Amount"/>
+										<field name="amount_total" sum="Total Amount"/>
+										<field name="state"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+						<field name="message_ids" widget="mail_thread"/>
+					</div>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.passport_booking_graph_view" model="ir.ui.view">
+         <field name="name">passport.booking.graph</field>
+         <field name="model">passport.booking</field>
+         <field name="type">graph</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><graph string="Passport Booking" type="bar">
+					<field name="customer_id"/>
+					<field name="price" operator="+"/>
+				</graph>
+         </field>
+</record>
+<record id="tour_travel.passport_booking_search_view" model="ir.ui.view">
+         <field name="name">passport.booking.search</field>
+         <field name="model">passport.booking</field>
+         <field name="type">search</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><search string="Search">
+					<field name="name" string="Booking ID" filter_domain="[('name','ilike', self)]"/>
+					<field name="passport_number" string="Passport Number" filter_domain="[('passport_number','ilike', self)]"/>					
+					<field name="customer_id" string="Customer" filter_domain="[('customer_id','ilike', self)]"/>
+					<field name="holder_id" string="Holder" filter_domain="[('holder_id','ilike', self)]"/>
+					<field name="user_id" string="Responsible" filter_domain="[('user_id','ilike', self)]"/>
+					<separator/>
+					<filter string="Confirmed" name="confirm" domain="[('state','=','confirm')]" help="Confirmed"/>
+					<filter string="Verified" name="verify" domain="[('state','=','verify')]" help="Verified"/>
+					<filter string="Approved" name="approve" domain="[('state','=','approve')]" help="Approved"/>
+					<separator/>
+					<filter string="Done" name="done" domain="[('state','=','done')]" help="Done"/>
+					<filter string="Cancelled" name="cancel" domain="[('state','=','cancel')]" help="Cancelled"/>
+					<group expand="0" string="Group By...">
+						<filter string="Customer" domain="[]" context="{'group_by':'customer_id'}"/>
+						<filter string="Responsible" domain="[]" context="{'group_by':'user_id'}"/>
+						<separator/>
+						<filter string="Monthly Orders" icon="terp-go-month" domain="[]" context="{'group_by':'current_date'}"/>
+						<filter string="Monthly Issue" icon="terp-go-month" domain="[]" context="{'group_by':'issue_date'}"/>
+						<filter string="Monthly Expire" icon="terp-go-month" domain="[]" context="{'group_by':'expiry_date'}"/>
+					</group>
+				</search>
+         </field>
+</record>
+<record id="tour_travel.passport_booking_tree_view" model="ir.ui.view">
+         <field name="name">passport.booking.tree</field>
+         <field name="model">passport.booking</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Passport Booking" decoration-info="state=='draft'" decoration-muted="state=='canl'" decoration-success="state=='done'">
+					<field name="name"/>
+					<field name="passport_number"/>
+					<field name="customer_id"/>
+					<field name="holder_id"/>
+					<field name="price"/>
+					<field name="state"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.passport_form_view" model="ir.ui.view">
+         <field name="name">passport.form</field>
+         <field name="model">passport</field>
+         <field name="type">form</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><form string="Passport">
+					<header>
+						<button name="action_expire" string="Force to expire" type="object" states="available" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<field name="state" readonly="1" statusbar_visible="available, expire" widget="statusbar"/>
+					</header>
+					<sheet>
+						<field name="image" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;:&quot;image_medium&quot;}"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+						<group>
+							<group>								
+								<field name="partner_id" context="{'search_default_customer':1,'default_customer':1,'search_default_is_company':0,'default_is_company':0}"/>
+							</group>
+							<group>
+								<field name="issue_date"/>
+								<field name="expiry_date"/>								
+							</group>
+						</group>
+						<separator string="Visa"/>
+						<field name="visa_ids">
+							<tree string="Passport" colors="gray:state in ('expire')">
+								<field name="name"/>
+								<field name="country_id"/>
+								<field name="partner_id"/>
+								<field name="type_id"/>
+								<field name="issue_date"/>
+								<field name="expiry_date"/>
+								<field name="state"/>
+							</tree>
+						</field>
+					</sheet>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.passport_search_view" model="ir.ui.view">
+         <field name="name">passport.search</field>
+         <field name="model">passport</field>
+         <field name="type">search</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><search string="Search">
+					<field name="name" string="Passport Number" filter_domain="[('name','ilike', self)]"/>
+					<field name="partner_id" string="Holder" filter_domain="[('partner_id','ilike', self)]"/>
+					<separator/>
+					<filter string="Available" name="available" domain="[('state','=','available')]" help="Available"/>
+					<filter string="Expire" name="expire" domain="[('state','=','expire')]" help="Expire"/>
+					<group expand="0" string="Group By...">
+						<filter string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
+						<filter string="Monthly Expire" icon="terp-go-month" domain="[]" context="{'group_by':'expiry_date'}"/>
+					</group>
+				</search>
+         </field>
+</record>
+<record id="tour_travel.passport_tree_view" model="ir.ui.view">
+         <field name="name">passport.tree</field>
+         <field name="model">passport</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Passport" decoration-warning="state=='expire'">
+					<field name="name"/>
+					<field name="partner_id"/>
+					<field name="issue_date"/>
+					<field name="expiry_date"/>
+					<field name="state"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.tour_product_template_inherit_form" model="ir.ui.view">
+         <field name="name">product.template.tour.form</field>
+         <field name="model">product.template</field>
+         <field name="type">form</field><field name="inherit_id" ref="product.product_template_form_view"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><data><data>
+					<xpath expr="//field[@name='type']" position="after">
+						<field name="specific" attrs="{'invisible':[('type','!=','service')]}"/>
+						<field name="departure" attrs="{'invisible': ['|', ('type','!=','service'), ('specific', '!=', 'tour')], 'required': [('specific', '=', 'tour')]}"/>
+						<field name="duration" attrs="{'invisible': ['|', ('type','!=','service'), ('specific', '!=', 'tour')], 'required': [('specific', '=', 'tour')]}"/>
+						<field name="tour_type" attrs="{'invisible': ['|', ('type','!=','service'), ('specific', '!=', 'tour')], 'required': [('specific', '=', 'tour')]}" widget="selection"/>
+					</xpath>
+				</data>
+				<page name="sales" position="after">
+					<page string="Itinerary" attrs="{'invisible': ['|',('type','!=','service'),('specific', '!=', 'tour')]}">
+						<group string="Programs">
+							<field name="tour_program_ids" nolabel="1">
+								<tree string="Tour Programs" editable="bottom">
+									<field name="day"/>
+									<field name="tour_program_id"/>									
+									<field name="breakfast"/>
+									<field name="lunch"/>
+									<field name="dinner"/>
+								</tree>
+							</field>
+						</group>
+						<separator string="Moving"/>
+						<field name="tour_destination_ids"/>
+					</page>
+					<page string="Child Products" attrs="{'invisible': ['|',('type','!=','service'),('specific', '!=', 'tour')]}">
+						<group name="hotel">
+							<separator string="Hotels" colspan="4"/>
+							<field name="hotel_ids" colspan="4" nolabel="1">
+								<tree string="Hotel Information">
+									<field name="hotel_class_id"/>
+									<field name="hotel_id"/>
+									<field name="room_id"/>
+									<field name="days"/>
+									<field name="auto_booking" invisible="1"/>
+								</tree>
+							</field>
+						</group>
+						<group name="transport">
+							<separator string="Transports" colspan="4"/>
+							<field name="transport_ids" colspan="4" nolabel="1"/>
+						</group>
+						<group name="others">
+							<separator string="Other" colspan="4"/>
+							<field name="product_ids" colspan="4" nolabel="1">
+								<tree string="Products" editable="bottom">
+									<field name="product_id"/>
+									<field name="name"/>
+									<field name="product_uom_qty"/>
+									<field name="product_uom" groups="product.group_uom"/>
+								</tree>
+							</field>
+						</group>
+					</page>
+				</page>
+			</data>
+         </field>
+</record>
+<record id="tour_travel.report_attendee_declaration" model="ir.ui.view">
+         <field name="name">report_attendee_declaration</field>
+         <field name="model"></field>
+         <field name="type">qweb</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><t t-name="tour_travel.report_attendee_declaration">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+		            <t t-call="tour_travel.attendee_declaration_doc"/>
+		        </t>
+			</t>
+		</t>
+         </field>
+</record>
+<record id="tour_travel.report_tour_booking" model="ir.ui.view">
+         <field name="name">report_tour_booking</field>
+         <field name="model"></field>
+         <field name="type">qweb</field><field name="inherit_id" ref="sale.report_saleorder_document"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><data inherit_id="sale.report_saleorder_document">
+			<xpath expr="//p[@t-field=&quot;doc.note&quot;]" position="after">
+				<t t-if="doc.tour_id">
+					<div class="row">
+						<h3 style="width:100%;background-color:#ccc;padding:5px;">
+							QUOTATION SUMMARY DETAILS
+						</h3>
+						<div class="col-xs-3">
+							<p>Tour:</p>
+							<p>Departure:</p>
+							<p t-if="doc.tour_date_id.start_date">Departure Date:</p>
+							<p>Tour Duration (in days):</p>
+						</div>
+						<div class="col-xs-9">
+							<p>
+								<span t-esc="doc.tour_id.name"/>
+							</p>
+							<p>
+								<span t-esc="doc.tour_id.departure.name"/>
+								<t t-if="doc.tour_id.departure.city">
+									,
+									<span t-esc="doc.tour_id.departure.city"/>
+								</t>
+								<t t-if="doc.tour_id.departure.state_id">
+									,
+									<span t-esc="doc.tour_id.departure.state_id.name"/>
+								</t>
+								<t t-if="doc.tour_id.departure.country_id">
+									,
+									<span t-esc="doc.tour_id.departure.country_id.name"/>
+								</t>
+							</p>
+							<p>
+								<span t-field="doc.tour_date_id.start_date"/>
+							</p>
+							<p>
+								<span t-esc="doc.tour_date_id.duration if doc.tour_date_id else doc.tour_id.duration"/>
+								day(s)
+							</p>
+						</div>
+					</div>
+					<div class="row">
+						<h3 style="width:100%;background-color:#ccc;padding:5px;">
+							ITINERARIES
+						</h3>
+						<t t-foreach="doc.tour_date_id.tour_date_program_ids if doc.tour_date_id else doc.tour_id.tour_program_ids" t-as="program">
+							<div class="media" style="padding-right:15px;padding-left:15px;">
+								<span class="media-left pull-left" t-field="program.tour_program_id.image_medium" t-field-options="{&quot;widget&quot;: &quot;image&quot;, &quot;class&quot;: &quot;img-thumbnail&quot;}"/>
+								<div class="media-body">
+									<h4 class="media-heading">
+										<t t-if="program.day">Day <span t-esc="program.day"/>: </t><span t-esc="program.tour_program_id.name"/>
+									</h4>
+									<span t-field="program.tour_program_id.description" class="text-muted"/>
+								</div>
+							</div>
+						</t>
+					</div>
+					<div class="row">
+						<h3 style="width:100%;background-color:#ccc;padding:5px;">
+							DESTINATIONS
+						</h3>
+						<t t-foreach="doc.tour_date_id.tour_date_destination_ids if doc.tour_date_id else doc.tour_id.tour_destination_ids" t-as="destination">
+							<h4>
+								<span t-esc="destination.destination_id.name" style="text-transform:uppercase;"/>
+								<t t-if="destination.city">
+									,
+									<span t-esc="destination.city" style="text-transform:uppercase;"/>
+								</t>
+								<t t-if="destination.state_id">
+									,
+									<span t-esc="destination.state_id.name" style="text-transform:uppercase;"/>
+								</t>
+								<t t-if="destination.country_id">
+									,
+									<span t-esc="destination.country_id.name" style="text-transform:uppercase;"/>
+								</t>
+								<t t-if="destination.days">
+									,
+									<span t-esc="destination.days" style="text-transform:uppercase;"/>
+									day(s)
+								</t>
+							</h4>
+							<t t-if="destination.hotel_ids">
+								<table class="table">
+									<tr>
+										<th>Hotel Class</th>
+										<th>Hotel</th>
+										<th>Room Type</th>
+										<th>No. of Days</th>
+									</tr>
+									<tr t-foreach="destination.hotel_ids" t-as="hotel">
+										<td>
+											<span t-esc="hotel.hotel_class_id.name"/>
+										</td>
+										<td>
+											<span t-esc="hotel.hotel_id.name"/>
+										</td>
+										<td>
+											<span t-esc="hotel.room_id.name"/>
+										</td>
+										<td>
+											<span t-esc="hotel.days"/>
+										</td>
+									</tr>
+								</table>
+							</t>
+						</t>
+					</div>
+					<div class="row">
+						<h3 style="width:100%;background-color:#ccc;padding:5px;">
+							TRANSPORTATIONS
+						</h3>
+						<t t-if="doc.tour_date_id.tour_date_transport_ids if doc.tour_date_id else doc.tour_id.transport_ids">
+							<table class="table">
+								<tr>
+									<th>From</th>
+									<th>To</th>
+									<th>Carrier</th>
+									<th>Type</th>
+								</tr>
+								<tr t-foreach="doc.tour_date_id.tour_date_transport_ids if doc.tour_date_id else doc.tour_id.transport_ids" t-as="transport">
+									<td>
+										<span t-esc="transport.from_destination.name"/>
+									</td>
+									<td>
+										<span t-esc="transport.to_destination.name"/>
+									</td>
+									<td>
+										<span t-esc="transport.carrier_id.name"/>
+									</td>
+									<td>
+										<span t-esc="transport.product_name"/>
+									</td>
+								</tr>
+							</table>
+						</t>
+					</div>
+					<div class="row">
+						<h3 style="width:100%;background-color:#ccc;padding:5px;">
+							INCLUSIONS
+						</h3>
+						<t t-if="doc.tour_date_id.tour_date_product_ids if doc.tour_date_id else doc.tour_id.product_ids">
+							<table class="table">
+								<tr>
+									<th>Product</th>
+									<th>Description</th>
+									<th>Quantity</th>
+									<th>Unit of Measure</th>
+								</tr>
+								<tr t-foreach="doc.tour_date_id.tour_date_product_ids if doc.tour_date_id else doc.tour_id.product_ids" t-as="product">
+									<td>
+										<span t-esc="product.product_id.name"/>
+									</td>
+									<td>
+										<span t-esc="product.name"/>
+									</td>
+									<td>
+										<span t-esc="product.product_uom_qty"/>
+									</td>
+									<td>
+										<span t-esc="product.product_uom.name"/>
+									</td>
+								</tr>
+							</table>
+						</t>
+					</div>
+				</t>
+			</xpath>
+		</data>
+         </field>
+</record>
+<record id="tour_travel.tour_booking_inherit_form" model="ir.ui.view">
+         <field name="name">tour.booking.form</field>
+         <field name="model">sale.order</field>
+         <field name="type">form</field><field name="inherit_id" ref="sale.view_order_form"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><data><field name="partner_id" position="after">
+					<field name="is_tour_booking"/>
+					<field name="tour_date_id" attrs="{'invisible': [('is_tour_booking','=',False)]}"/>
+					<field name="book_date" attrs="{'invisible': [('is_tour_booking','=',False)]}"/>
+				</field>
+				<xpath expr="//notebook" position="inside">
+					<page string="Attendees" attrs="{'invisible': [('is_tour_booking','=',False)]}">
+						<field name="tour_attendee_ids">
+							<tree string="Tour Attendees" editable="bottom">
+								<field name="partner_id"/>
+								<field name="date_of_birth"/>
+								<field name="attendee_id"/>
+								<field name="gender"/>
+							</tree>
+						</field>
+					</page>
+				</xpath>
+			</data>
+         </field>
+</record>
+<record id="tour_travel.tour_booking_inherit_search" model="ir.ui.view">
+         <field name="name">tour.booking.search</field>
+         <field name="model">sale.order</field>
+         <field name="type">search</field><field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><data><field name="partner_id" position="after">
+					<field name="tour_date_id"/>
+				</field>
+				<xpath expr="//filter[@name='customer']" position="after">
+					<filter name="tour_date" string="Tour Date" domain="[('is_tour_booking', '=', True)]" context="{'group_by':'tour_date_id'}"/>
+				</xpath>
+			</data>
+         </field>
+</record>
+<record id="tour_travel.tour_quotation_tree_view" model="ir.ui.view">
+         <field name="name">tour.booking.tree</field>
+         <field name="model">sale.order</field>
+         <field name="type">tree</field><field name="inherit_id" ref="sale.view_quotation_tree"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><field name="state" position="before">
+					<field name="attendee_count"/>
+				</field>
+         </field>
+</record>
+<record id="tour_travel.tour_crm_lead_inherit_search" model="ir.ui.view">
+         <field name="name">tour.crm.lead.inherit.search</field>
+         <field name="model">crm.lead</field>
+         <field name="type">search</field><field name="inherit_id" ref="crm.view_crm_case_leads_filter"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><data><field name="partner_id" position="after">
+					<field name="tour_date_id"/>
+					<field name="product_id"/>
+				</field>
+				<xpath expr="//filter[@name='customer']" position="after">
+					<filter string="Tour Date" domain="[('tour_date_id', '!=', False)]" context="{'group_by':'tour_date_id'}"/>
+				</xpath>
+			</data>
+         </field>
+</record>
+
+<!-- 
+<record id="tour_travel.tour_crm_new_quotation_inherit" model="ir.ui.view">
+         <field name="name">tour.crm.new.quotation.inherit</field>
+         <field name="model">crm.lead</field>
+         <field name="type">form</field><field name="inherit_id" ref="sale_crm.crm_case_form_view_oppor"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><xpath expr="//button[@name='399']" position="replace">
+					<button string="New Quotation" name="399" type="action" class="oe_highlight" context="{'search_default_partner_id': partner_id,                                   'default_partner_id': partner_id,                                   'default_team_id': team_id,                                   'default_is_tour_booking': 1,                                   'default_tour_date_id': tour_date_id,}"/>
+				</xpath>
+         </field>
+</record>
+
+ -->
+ 
+<record id="tour_travel.tour_crm_oppor_inherit_search" model="ir.ui.view">
+         <field name="name">tour.crm.oppor.inherit.search</field>
+         <field name="model">crm.lead</field>
+         <field name="type">search</field><field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><data><field name="partner_id" position="after">
+					<field name="tour_date_id"/>
+					<field name="product_id"/>
+				</field>
+				<xpath expr="//filter[@name='stage']" position="after">
+					<filter string="Tour Date" domain="[('tour_date_id', '!=', False)]" context="{'group_by':'tour_date_id'}"/>
+					<filter string="Tour Date" domain="[('tour_date_id', '!=', False)]" context="{'group_by':'product_id'}"/>
+				</xpath>
+			</data>
+         </field>
+</record>
+<record id="tour_travel.tour_date_attendee_tree_view" model="ir.ui.view">
+         <field name="name">tour.date.attendee.tree</field>
+         <field name="model">res.partner</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Attendees">
+					<field name="name"/>
+					<field name="phone"/>
+					<field name="email"/>
+					<field name="mobile"/>
+					<field name="gender"/>
+					<field name="date_of_birth"/>
+					<field name="passport_number"/>
+					<field name="passport_expiry_date"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.tour_date_destination_line_form_view" model="ir.ui.view">
+         <field name="name">tour.date.destination.form</field>
+         <field name="model">tour.date.destination</field>
+         <field name="type">form</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><form string="Tour Date Destination">
+					<group>
+						<group>
+							<field name="destination_id"/>
+							<field name="city"/>
+							<field name="state_id"/>
+							<field name="country_id"/>
+						</group>
+						<group>
+							<field name="days"/>
+						</group>
+					</group>
+					<separator string="Hotel Information"/>
+					<field name="hotel_ids">
+						<tree string="Tour Date Destination" editable="bottom">
+							<field name="hotel_class_id"/>
+							<field name="hotel_id" domain="[('hotel_class_id','=',hotel_class_id)]"/>
+							<field name="room_id" domain="[('hotel_id','=',hotel_id)]"/>
+							<field name="days"/>
+							<field name="auto_booking" invisible="1"/>
+						</tree>
+					</field>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.tour_date_search_view" model="ir.ui.view">
+         <field name="name">tour.date.search</field>
+         <field name="model">tour.date</field>
+         <field name="type">search</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><search string="Search Tour Date">
+					<field name="name" string="Tour Date Code." filter_domain="[('name','ilike',self)]"/>
+					<field name="tour_id"/>
+					<separator/>
+					<group expand="0" string="Group By">
+						<filter string="Tour" domain="[]" context="{'group_by':'tour_id'}"/>
+						<filter string="Departure Date" domain="[]" context="{'group_by':'start_date'}"/>
+						<filter string="Booking Deadline" domain="[]" context="{'group_by':'book_date'}"/>
+						<filter string="Tour Type" domain="[]" context="{'group_by':'tour_type'}"/>
+					</group>
+				</search>
+         </field>
+</record>
+<record id="tour_travel.tour_date_tree_view" model="ir.ui.view">
+         <field name="name">tour.date.tree</field>
+         <field name="model">tour.date</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Tour Date" decoration-info="state=='draft'" decoration-muted="state=='cancel'" decoration-warning="state in ('open', 'start') and available_seat &lt; 0" decoration-bf="state in ['open','start'] and available_seat &gt;= 0">
+					<field name="name"/>
+					<field name="tour_id"/>
+					<field name="start_date"/>
+					<field name="end_date"/>
+					<field name="book_date"/>
+					<field name="total_seat"/>
+					<field name="available_seat"/>
+					<field name="state"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.tour_destination_tree_view" model="ir.ui.view">
+         <field name="name">tour.destination.tree</field>
+         <field name="model">tour.destination</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Tour Destination">
+					<field name="destination_id"/>
+					<field name="city"/>
+					<field name="state_id"/>
+					<field name="country_id"/>
+					<field name="days"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.tour_lead_inherit_form" model="ir.ui.view">
+         <field name="name">tour.lead.inherit.form</field>
+         <field name="model">crm.lead</field>
+         <field name="type">form</field><field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><field name="user_id" position="before">
+					<field name="product_id"/>
+					<field name="tour_date_id"/>
+				</field>
+         </field>
+</record>
+<record id="tour_travel.tour_oppor_inherit_form" model="ir.ui.view">
+         <field name="name">tour.oppor.inherit.form</field>
+         <field name="model">crm.lead</field>
+         <field name="type">form</field><field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><field name="user_id" position="before">
+					<field name="product_id"/>
+					<field name="tour_date_id"/>
+				</field>
+         </field>
+</record>
+<record id="tour_travel.tour_partner_inherit_form" model="ir.ui.view">
+         <field name="name">tour.partner.inherit.form</field>
+         <field name="model">res.partner</field>
+         <field name="type">form</field><field name="inherit_id" ref="base.view_partner_form"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><data><field name="title" position="after">
+            		<field name="partner_id" attrs="{'invisible': [('is_company','=',True)]}"/>
+            		<field name="date_of_birth" attrs="{'invisible': [('is_company','=',True)]}"/>
+            		<field name="gender" attrs="{'invisible': [('is_company','=',True)]}"/>
+            	</field>
+            	<page name="internal_notes" position="after">
+            		<page string="Passports" attrs="{'invisible': [('is_company','=',True)]}">
+            			<field name="passport_ids" nolable="1"/>            			
+            		</page>            	
+            	</page>
+            </data>
+         </field>
+</record>
+<record id="tour_travel.tour_partner_inherit_search" model="ir.ui.view">
+         <field name="name">tour.partner.inherit.search</field>
+         <field name="model">res.partner</field>
+         <field name="type">search</field><field name="inherit_id" ref="base.view_res_partner_filter"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><field name="name" position="after">
+					<field name="tour_date_ids"/>
+				</field>
+         </field>
+</record>
+<record id="tour_travel.tour_program_form_view" model="ir.ui.view">
+         <field name="name">tour.program.form</field>
+         <field name="model">tour.program</field>
+         <field name="type">form</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><form string="Tour Program">
+					<sheet>
+						<field name="image" widget="image" class="oe_left oe_avatar"/>
+						<div class="oe_title oe_left">
+							<div class="oe_edit_only">
+								<label for="name"/>
+							</div>
+							<h1>
+								<field name="name" default_focus="1"/>
+							</h1>
+						</div>
+						<group>
+							<group>
+								<field name="breakfast"/>
+								<field name="lunch"/>
+								<field name="dinner"/>
+							</group>
+						</group>
+						<separator string="Description"/>
+						<field name="description"/>
+					</sheet>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.tour_program_tree_view" model="ir.ui.view">
+         <field name="name">tour.program.tree</field>
+         <field name="model">tour.program</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Tour Program">					
+					<field name="name"/>
+					<field name="breakfast"/>
+					<field name="lunch"/>
+					<field name="dinner"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.tour_purchase_order_inherit_form" model="ir.ui.view">
+         <field name="name">tour.purchase.order.inherit.form</field>
+         <field name="model">purchase.order</field>
+         <field name="type">form</field><field name="inherit_id" ref="purchase.purchase_order_form"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><field name="partner_ref" position="after">
+                    <field name="tour_date_id"/>
+                </field>
+         </field>
+</record>
+<record id="tour_travel.tour_purchase_order_inherit_search" model="ir.ui.view">
+         <field name="name">tour.purchase.order.inherit.search</field>
+         <field name="model">purchase.order</field>
+         <field name="type">search</field><field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><data><field name="partner_id" position="after">
+					<field name="tour_date_id"/>
+				</field>
+				<xpath expr="//group" position="inside">
+					<filter string="Tour Date" context="{'group_by':'tour_date_id'}"/>
+				</xpath>
+			</data>
+         </field>
+</record>
+<record id="tour_travel.tour_stock_picking_inherit_form" model="ir.ui.view">
+         <field name="name">tour.stock.picking.inherit.form</field>
+         <field name="model">stock.picking</field>
+         <field name="type">form</field><field name="inherit_id" ref="stock.view_picking_form"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><field name="backorder_id" position="after">
+            		<field name="tour_date_id"/>
+            	</field>
+         </field>
+</record>
+<record id="tour_travel.tour_transport_form_view" model="ir.ui.view">
+         <field name="name">tour.transport.form</field>
+         <field name="model">tour.transport</field>
+         <field name="type">form</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><form string="Tour Transport">
+					<group>
+						<group>
+							<field name="from_destination"/>
+							<field name="to_destination"/>
+							<field name="time"/>
+							<field name="distance"/>
+						</group>
+						<group>
+							<field name="transport_id"/>
+							<field name="carrier_id"/>
+							<field name="carrier_line" context="{'search_default_specific':'transport','default_specific':'transport'}"/>
+							<field name="product_name" invisible="1"/>
+						</group>
+					</group>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.tour_transport_tree_view" model="ir.ui.view">
+         <field name="name">tour.transport.tree</field>
+         <field name="model">tour.transport</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Tour Transport">
+					<field name="from_destination"/>
+					<field name="to_destination"/>
+					<field name="transport_id"/>
+					<field name="carrier_id"/>
+					<field name="carrier_line"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.attendee_declaration_doc" model="ir.ui.view">
+         <field name="name">tour_travel.attendee_declaration_doc</field>
+         <field name="model"></field>
+         <field name="type">qweb</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><t t-name="tour_travel.attendee_declaration_doc">
+			<t t-call="web.basic_layout">
+				<div class="page">
+					<h2 class="text-center" style="margin-top:10px">PERSONAL DECLARATION</h2>
+					<div style="margin-top:15px;">
+							<strong style="font-size:18px">1. Full Name:</strong> <span t-esc="convertText(o.name, is_ascii)" style="font-size:18px"/><br/>
+							<strong>2. Address:</strong> <span t-esc="convertText(o.street,is_ascii)"/><t t-if="o.street2">, <span t-esc="convertText(o.street2,is_ascii)"/></t><t t-if="o.city">, <span t-esc="convertText(o.city,is_ascii)"/></t><t t-if="o.state_id">, <span t-esc="convertText(o.state_id.name,is_ascii)"/></t><t t-if="o.country_id">, <span t-esc="convertText(o.country_id.name,is_ascii)"/></t><br/>
+						</div>
+					<div class="row">						
+						<div class="col-xs-4">							
+							<strong>3. ID:</strong> <span t-field="o.partner_id"/><br/>
+							<strong>4. Phone:</strong> <span t-esc="o.phone"/><br/>							
+						</div>
+						<div class="col-xs-4">
+							<strong>Gender:</strong> <span t-field="o.gender"/><br/>
+							<strong>Mobile:</strong> <span t-esc="o.mobile"/><br/>
+						</div>
+						<div class="col-xs-4">
+							<strong>Birth date:</strong> <span t-esc="convertDate(o.date_of_birth)"/><br/>							
+							<strong>Email:</strong> <span t-esc="o.email"/><br/>
+						</div>
+					</div>
+					<t t-foreach="o.passport_ids" t-as="passport">
+						<t t-if="passport.state=='available'">
+							<h3 style="width:100%;background-color:#ccc;padding:5px;">
+								PASSPORT INFORMATION
+							</h3>
+							<div class="row">	
+								<div class="col-xs-3">
+									<p><strong>Passport Number:</strong></p>
+									<p><strong>Issue Date:</strong></p>
+									<p><strong>Expiry Date:</strong></p>
+								</div>	
+								<div class="col-xs-9">
+									<p><t t-if="o.passport_number"><span t-esc="o.passport_number.upper()"/></t></p>
+									<p><span t-esc="convertDate(o.passport_isue_date)"/></p>
+									<p><span t-esc="convertDate(o.passport_expiry_date)"/></p>									
+								</div>
+							</div>							
+						</t>
+						<t t-if="passport.state=='available' and passport.visa_ids">
+							<h3 style="width:100%;background-color:#ccc;padding:5px;">
+								VISA INFORMATION
+							</h3>
+							<table class="table">
+								<tr>
+									<th>Visa Number</th>
+									<th>Country</th>
+									<th>Issue Date</th>
+									<th>Expiry Date</th>
+								</tr>
+								<tr t-foreach="passport.visa_ids" t-as="visa">
+									<td><span t-esc="visa.name"/></td>
+									<td><span t-esc="convertText(visa.country_id.name, is_ascii)"/></td>
+									<td><span t-esc="convertDate(visa.issue_date)"/></td>
+		        					<td><span t-esc="convertDate(visa.expiry_date)"/></td>
+								</tr>
+							</table>
+						</t>
+					</t>
+				</div>
+			</t>
+		</t>
+         </field>
+</record>
+<record id="tour_travel.transport_line_tree_view" model="ir.ui.view">
+         <field name="name">transport.line.tree</field>
+         <field name="model">transport.line</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Transport Line">
+					<field name="transport_carrier_id"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.transport_tree_view" model="ir.ui.view">
+         <field name="name">transport.tree</field>
+         <field name="model">transport</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Transport Information">
+					<field name="partner_id"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.t_report_header" model="ir.ui.view">
+         <field name="name">t_report_header</field>
+         <field name="model"></field>
+         <field name="type">qweb</field><field name="inherit_id" ref="web.external_layout_background"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><data inherit_id="web.external_layout_background">
+			<xpath expr="//div[1]" position="replace">
+				<div class="header o_background_header">
+					<div class="row">
+						<div class="col-xs-3">
+							<img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" style="max-height: 45px;"/>
+						</div>
+						<div class="col-xs-9 text-right" style="margin-top:20px;" t-field="company.report_header"/>
+					</div>
+					<div class="row zero_min_height">
+						<div class="col-xs-12">
+							<div style="border-bottom: 1px solid black;"/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<div t-field="company.partner_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}" style="border-bottom: 1px solid black;"/>
+						</div>
+					</div>
+				</div>
+			</xpath>
+		</data>
+         </field>
+</record>
+<record id="tour_travel.tour_booking_tree_view" model="ir.ui.view">
+         <field name="name">t.tour.booking.tree</field>
+         <field name="model">sale.order</field>
+         <field name="type">tree</field><field name="inherit_id" ref="sale.view_order_tree"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><field name="state" position="before">
+					<field name="attendee_count"/>
+				</field>
+         </field>
+</record>
+<record id="tour_travel.visa_booking_calendar_view" model="ir.ui.view">
+         <field name="name">visa.booking.calendar</field>
+         <field name="model">visa.booking</field>
+         <field name="type">calendar</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><calendar string="Visa Booking" color="customer_id" date_start="current_date">
+					<field name="customer_id"/>
+					<field name="price"/>
+				</calendar>
+         </field>
+</record>
+<record id="tour_travel.visa_booking_form_view" model="ir.ui.view">
+         <field name="name">visa.booking.form</field>
+         <field name="model">visa.booking</field>
+         <field name="type">form</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><form string="Visa Booking">
+					<header>
+						<button name="confirm" string="Confirm" type="object" states="draft" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="verify" string="Verify Document" type="object" states="confirm" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="approve" string="Approve By Officer" type="object" states="verify" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="cancel" string="Cancel" type="object" states="confirm,verify" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="issue_visa" string="Issue Visa" type="object" states="approve" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<field name="state" readonly="1" statusbar_visible="draft, confirm, verify, approve, done" widget="statusbar"/>
+					</header>
+					<sheet>
+						<div class="oe_title">
+                            <label for="name" class="oe_edit_only" string="Booking ID"/>
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+						<group>
+							<group string="Booking Information">
+								<field name="customer_id" context="{'search_default_customer':1,'default_customer':1,'search_default_is_company':0,'default_is_company':0}"/>
+								<field name="pricelist_id"/>
+								<field name="currency_id" groups="base.group_multi_currency"/>
+								<field name="email"/>
+								<field name="mobile"/>
+								<field name="current_date"/>
+								<field name="user_id"/>
+							</group>
+							<group string="Visa Information">
+								<field name="holder_id"/>
+								<field name="visa_number" attrs="{'readonly': [('state','in',('draft','confirm','verify','done','cancel'))], 'required': [('state','=','approve')]}"/>
+								<field name="issue_date" attrs="{'readonly': [('state','in',('draft','confirm','verify','done','cancel'))], 'required': [('state','=','approve')]}"/>
+								<field name="expiry_date" attrs="{'readonly': [('state','in',('draft','confirm','verify','done','cancel'))], 'required': [('state','=','approve')]}"/>
+								<field name="passport_id" domain="['&amp;',('partner_id','=',holder_id),('state','=','available')]"/>
+								<field name="country_id"/>
+								<field name="visa_type_id"/>
+								<field name="product_id" context="{'search_default_sale_ok':1,'default_sale_ok':1,'search_default_type':'service','default_type':'service'}"/>
+								<field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Required Documents">
+								<field name="document_ids">
+									<tree string="Document Information" editable="bottom">
+										<field name="tour_document_type_id"/>
+										<field name="name"/>
+										<field name="original_copy"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Attachments">
+								<field name="attachment_ids">
+									<tree string="Attachments">
+										<field name="name"/>
+										<field name="datas_fname"/>
+										<field name="document_type_id"/>
+										<field name="type"/>
+										<field name="company_id" groups="base.group_multi_company"/>
+										<field name="create_uid"/>
+										<field name="create_date"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Sales Order &amp; Invoices">
+								<separator string="Sales Order"/>
+								<field name="sale_order_ids"/>
+								<separator string="Invoices"/>
+								<field name="invoice_ids">
+									<tree string="Invoice">
+										<field name="partner_id" groups="base.group_user"/>
+										<field name="commercial_partner_id" invisible="1"/>
+										<field name="date_invoice"/>
+										<field name="number"/>
+										<field name="reference" invisible="1"/>
+										<field name="name" invisible="1"/>
+										<field name="journal_id" invisible="1"/>
+										<field name="company_id" groups="base.group_multi_company" widget="selection"/>
+										<field name="user_id" string="Responsible" invisible="1"/>
+										<field name="date_due"/>
+										<field name="origin" invisible="1"/>
+										<field name="currency_id" groups="base.group_multi_currency"/>
+										<field name="residual" sum="Residual Amount"/>
+										<field name="amount_untaxed" sum="Untaxed Amount"/>
+										<field name="amount_total" sum="Total Amount"/>
+										<field name="state"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+						<field name="message_ids" widget="mail_thread"/>
+					</div>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.visa_booking_graph_view" model="ir.ui.view">
+         <field name="name">visa.booking.graph</field>
+         <field name="model">visa.booking</field>
+         <field name="type">graph</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><graph string="Visa Booking" type="bar">
+					<field name="customer_id"/>
+					<field name="price" operator="+"/>
+				</graph>
+         </field>
+</record>
+<record id="tour_travel.visa_booking_search_view" model="ir.ui.view">
+         <field name="name">visa.booking.search</field>
+         <field name="model">visa.booking</field>
+         <field name="type">search</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><search string="Search">
+					<field name="name" string="Booking ID" filter_domain="[('name','ilike', self)]"/>
+					<field name="visa_number" string="Visa Number" filter_domain="[('visa_number','ilike', self)]"/>
+					<field name="passport_id" string="Passport Number" filter_domain="[('passport_id','ilike', self)]"/>
+					<field name="customer_id" string="Customer" filter_domain="[('customer_id','ilike', self)]"/>
+					<field name="holder_id" string="Holder" filter_domain="[('holder_id','ilike', self)]"/>
+					<field name="country_id" string="Country" filter_domain="[('country_id','ilike', self)]"/>
+					<field name="visa_type_id" string="Visa Type" filter_domain="[('visa_type_id','ilike', self)]"/>
+					<field name="user_id" string="Responsible" filter_domain="[('user_id','ilike', self)]"/>
+					<separator/>
+					<filter string="Confirmed" name="confirm" domain="[('state','=','confirm')]" help="Confirmed"/>
+					<filter string="Verified" name="verify" domain="[('state','=','verify')]" help="Verified"/>
+					<filter string="Approved" name="approve" domain="[('state','=','approve')]" help="Approved"/>
+					<separator/>
+					<filter string="Done" name="done" domain="[('state','=','done')]" help="Done"/>
+					<filter string="Cancelled" name="cancel" domain="[('state','=','cancel')]" help="Cancelled"/>
+					<group expand="0" string="Group By...">
+						<filter string="Customer" domain="[]" context="{'group_by':'customer_id'}"/>
+						<filter string="Responsible" domain="[]" context="{'group_by':'user_id'}"/>
+						<filter string="Passport Number" domain="[]" context="{'group_by':'passport_id'}"/>
+						<filter string="Country" domain="[]" context="{'group_by':'country_id'}"/>
+						<filter string="Visa Type" domain="[]" context="{'group_by':'visa_type_id'}"/>
+						<separator/>
+						<filter string="Monthly Orders" icon="terp-go-month" domain="[]" context="{'group_by':'current_date'}"/>
+						<filter string="Monthly Issue" icon="terp-go-month" domain="[]" context="{'group_by':'issue_date'}"/>
+						<filter string="Monthly Expire" icon="terp-go-month" domain="[]" context="{'group_by':'expiry_date'}"/>
+					</group>
+				</search>
+         </field>
+</record>
+<record id="tour_travel.visa_booking_tree_view" model="ir.ui.view">
+         <field name="name">visa.booking.tree</field>
+         <field name="model">visa.booking</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Visa Booking" decoration-info="state=='draft'" decoration-warning="state=='cancel'" decoration-muted="state=='done'">
+					<field name="name"/>
+					<field name="visa_number"/>
+					<field name="customer_id"/>
+					<field name="holder_id"/>
+					<field name="country_id"/>
+					<field name="visa_type_id"/>
+					<field name="price"/>
+					<field name="state"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.visa_search_view" model="ir.ui.view">
+         <field name="name">visa.search</field>
+         <field name="model">visa</field>
+         <field name="type">search</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><search string="Search">
+					<field name="name" string="Visa Number" filter_domain="[('name','ilike', self)]"/>
+					<field name="passport_id" string="Passport Number" filter_domain="[('passport_id','ilike', self)]"/>
+					<field name="country_id" string="Country" filter_domain="[('country_id','ilike', self)]"/>
+					<field name="partner_id" string="Holder" filter_domain="[('partner_id','ilike', self)]"/>
+					<field name="type_id" string="Visa Type" filter_domain="[('type_id','ilike', self)]"/>
+					<separator/>
+					<filter string="Available" name="available" domain="[('state','=','available')]" help="Available"/>
+					<filter string="Expire" name="expire" domain="[('state','=','expire')]" help="Expire"/>
+					<group expand="0" string="Group By...">
+						<filter string="Passport Number" domain="[]" context="{'group_by':'passport_id'}"/>
+						<filter string="Country" domain="[]" context="{'group_by':'country_id'}"/>
+						<filter string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
+						<filter string="Visa Type" domain="[]" context="{'group_by':'type_id'}"/>
+						<filter string="Monthly Expire" icon="terp-go-month" domain="[]" context="{'group_by':'expiry_date'}"/>
+					</group>
+				</search>
+         </field>
+</record>
+<record id="tour_travel.visa_tree_view" model="ir.ui.view">
+         <field name="name">visa.tree</field>
+         <field name="model">visa</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Visa" decoration-warning="state=='expire'">
+					<field name="name"/>
+					<field name="passport_id"/>
+					<field name="country_id"/>
+					<field name="partner_id"/>
+					<field name="type_id"/>
+					<field name="issue_date"/>
+					<field name="expiry_date"/>
+					<field name="state"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.visa_type_tree_view" model="ir.ui.view">
+         <field name="name">visa.type.tree</field>
+         <field name="model">visa.type</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Visa Type">
+					<field name="name"/>
+					<field name="duration"/>
+					<!-- <field name="limit_date" /> -->
+				</tree>
+         </field>
+</record>
+    </data>
+</odoo>

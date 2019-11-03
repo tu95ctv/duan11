@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+   <data>
+      <record id="todo_form_view" model="ir.ui.view">
+         <field name="name">todo.form</field>
+         <field name="model">todo.todo</field>
+         <field name="arch" type="xml">
+            <form string="todo">
+               <header>
+                  <button class="oe_highlight" type="object" string="Set To Draft" name="action_draft" states="approved,rejected" groups="todo.group_todo_manager" />
+                  <button class="oe_highlight" type="object" string="Confirm" name="action_waiting_for_approval" states="draft" />
+                  <button class="oe_highlight" type="object" string="Approved" name="action_approved" states="waiting_for_approval,rejected" groups="todo.group_todo_manager" />
+                  <button class="oe_highlight" type="object" string="Rejected" name="action_rejected" states="waiting_for_approval,approved" groups="todo.group_todo_manager" />
+                  <field name="state" widget="statusbar" />
+               </header>
+               <sheet>
+                  <group>
+                     <field name="description" />
+                     <field name="created_date" />
+                     <field name="deadline" />
+                     <field name="responsible_id" />
+                     <field name="manager_id" />
+                  </group>
+               </sheet>
+            </form>
+         </field>
+      </record>
+      <record id="todo_list_view" model="ir.ui.view">
+         <field name="name">todo.list</field>
+         <field name="model">todo.todo</field>
+         <field name="arch" type="xml">
+            <tree string="todo">
+               <field name="description" />
+               <field name="created_date" />
+               <field name="deadline" />
+               <field name="responsible_id" />
+               <field name="manager_id" />
+               <field name="state" />
+            </tree>
+         </field>
+      </record>
+      <record id="todo_action" model="ir.actions.act_window">
+         <field name="name">todo</field>
+         <field name="res_model">todo.todo</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="domain" />
+         <field name="context">{}</field>
+      </record>
+   </data>
+</odoo>

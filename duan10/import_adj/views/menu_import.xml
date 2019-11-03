@@ -1,0 +1,65 @@
+<odoo>
+	<data>
+		<record id="menu_import_form_view" model="ir.ui.view">
+         <field name="name">menu_import.form</field>
+         <field name="model">import_adj.menu_import</field>
+         <field name="arch" type="xml">
+            <form string="menu_import">
+               <header>
+	               <!-- 
+	                  <button class="oe_highlight" type="object" string="Test_search" name="test_search"  />
+	                  <button class="oe_highlight" type="object" string="set_list_of_models" name="set_list_of_models"  />
+	                -->
+               </header>
+               <sheet>
+                  <group>
+					<field name="id_char"/>
+                  	<field name="action"/>
+					<field name="active"/>
+					<field name="child_id"/>
+					<field name="complete_name"/>
+					<field name="groups_id"/>
+					<field name="name"/>
+					<field name="parent_id"/>
+					<field name="parent_left"/>
+					<field name="parent_right"/>
+					<field name="sequence"/>
+					<field name="web_icon"/>
+					<field name="web_icon_data"/>
+                  </group>
+               </sheet>
+            </form>
+         </field>
+      </record>
+      <record id="menu_import_list_view" model="ir.ui.view">
+         <field name="name">menu_import.list</field>
+         <field name="model">import_adj.menu_import</field>
+         <field name="arch" type="xml">
+            <tree string="menu_import">
+               <field name="action"/>
+					<field name="id_char"/>
+					<field name="active"/>
+					<field name="child_id"/>
+					<field name="complete_name"/>
+					<field name="groups_id"/>
+					<field name="name"/>
+					<field name="parent_id"/>
+					<field name="parent_left"/>
+					<field name="parent_right"/>
+					<field name="sequence"/>
+					<field name="web_icon"/>
+					<field name="web_icon_data"/>
+
+            </tree>
+         </field>
+      </record>
+      <record id="menu_import_action" model="ir.actions.act_window">
+         <field name="name">menu_import</field>
+         <field name="res_model">import_adj.menu_import</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="domain" />
+         <field name="context">{}</field>
+      </record>
+	</data>
+</odoo>

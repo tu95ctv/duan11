@@ -1,0 +1,81 @@
+<odoo>
+	<data>
+		<record id="view_import_form_view" model="ir.ui.view">
+         <field name="name">view_import.form</field>
+         <field name="model">import_adj.view_import</field>
+         <field name="arch" type="xml">
+            <form string="view_import">
+               <header>
+	               <!-- 
+	                  <button class="oe_highlight" type="object" string="Test_search" name="test_search"  />
+	                  <button class="oe_highlight" type="object" string="set_list_of_models" name="set_list_of_models"  />
+	                -->
+               </header>
+               <sheet>
+                  <group>
+                  		<field name="id_char"/>
+						<field name="arch"/>
+						<field name="arch_base"/>
+						<field name="arch_db"/>
+						<field name="arch_fs"/>
+						<field name="create_date"/>
+						<field name="field_parent"/>
+						<field name="groups_id"/>
+						<field name="inherit_children_ids"/>
+						<field name="inherit_id"/>
+						<field name="key"/>
+						<field name="mode"/>
+						<field name="model"/>
+						<field name="model_data_id"/>
+						<field name="model_ids"/>
+						<field name="name"/>
+						<field name="priority"/>
+						<field name="type"/>
+						<field name="write_date"/>
+						<field name="xml_id"/>
+
+
+                  </group>
+               </sheet>
+            </form>
+         </field>
+      </record>
+      <record id="view_import_list_view" model="ir.ui.view">
+         <field name="name">view_import.list</field>
+         <field name="model">import_adj.view_import</field>
+         <field name="arch" type="xml">
+            <tree string="view_import">
+               <field name="id_char"/>
+						<field name="arch"/>
+						<field name="arch_base"/>
+						<field name="arch_db"/>
+						<field name="arch_fs"/>
+						<field name="create_date"/>
+						<field name="field_parent"/>
+						<field name="groups_id"/>
+						<field name="inherit_children_ids"/>
+						<field name="inherit_id"/>
+						<field name="key"/>
+						<field name="mode"/>
+						<field name="model"/>
+						<field name="model_data_id"/>
+						<field name="model_ids"/>
+						<field name="name"/>
+						<field name="priority"/>
+						<field name="type"/>
+						<field name="write_date"/>
+						<field name="xml_id"/>
+
+            </tree>
+         </field>
+      </record>
+      <record id="view_import_action" model="ir.actions.act_window">
+         <field name="name">view_import</field>
+         <field name="res_model">import_adj.view_import</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="domain" />
+         <field name="context">{}</field>
+      </record>
+	</data>
+</odoo>

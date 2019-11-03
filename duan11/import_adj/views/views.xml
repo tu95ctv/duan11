@@ -1,0 +1,19 @@
+<odoo>
+	<data>
+		<record id="view_model_tree_inherit" model="ir.ui.view">
+            <field name="name">ir.model tree.inherit</field>
+            <field name="model">ir.model</field>
+            <field name="inherit_id" ref="base.view_model_tree"></field>
+            <field name="arch" type="xml">
+            	<field name="state" position="after">
+            		<field name="write_date"/>
+            	</field>
+            	
+            </field>
+          </record>
+          
+       
+         
+            
+	</data>
+</odoo>

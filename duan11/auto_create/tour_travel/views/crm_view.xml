@@ -1,0 +1,72 @@
+<odoo>
+    <data>
+    <record id="tour_travel.tour_crm_new_quotation_inherit" model="ir.ui.view">
+         <field name="name">tour.crm.new.quotation.inherit</field>
+         <field name="model">crm.lead</field>
+         <field name="type">form</field><field name="inherit_id" ref="sale_crm.crm_case_form_view_oppor"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><xpath expr="//button[@name='399']" position="replace">
+					<button string="New Quotation" name="399" type="action" class="oe_highlight" context="{'search_default_partner_id': partner_id,                                   'default_partner_id': partner_id,                                   'default_team_id': team_id,                                   'default_is_tour_booking': 1,                                   'default_tour_date_id': tour_date_id,}"/>
+				</xpath>
+         </field>
+</record>
+<record id="tour_travel.tour_lead_inherit_form" model="ir.ui.view">
+         <field name="name">tour.lead.inherit.form</field>
+         <field name="model">crm.lead</field>
+         <field name="type">form</field><field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><field name="user_id" position="before">
+					<field name="product_id"/>
+					<field name="tour_date_id"/>
+				</field>
+         </field>
+</record>
+<record id="tour_travel.tour_oppor_inherit_form" model="ir.ui.view">
+         <field name="name">tour.oppor.inherit.form</field>
+         <field name="model">crm.lead</field>
+         <field name="type">form</field><field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><field name="user_id" position="before">
+					<field name="product_id"/>
+					<field name="tour_date_id"/>
+				</field>
+         </field>
+</record>
+<record id="tour_travel.tour_crm_lead_inherit_search" model="ir.ui.view">
+         <field name="name">tour.crm.lead.inherit.search</field>
+         <field name="model">crm.lead</field>
+         <field name="type">search</field><field name="inherit_id" ref="crm.view_crm_case_leads_filter"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><data><field name="partner_id" position="after">
+					<field name="tour_date_id"/>
+					<field name="product_id"/>
+				</field>
+				<xpath expr="//filter[@name='customer']" position="after">
+					<filter string="Tour Date" domain="[('tour_date_id', '!=', False)]" context="{'group_by':'tour_date_id'}"/>
+				</xpath>
+			</data>
+         </field>
+</record>
+<record id="tour_travel.tour_crm_oppor_inherit_search" model="ir.ui.view">
+         <field name="name">tour.crm.oppor.inherit.search</field>
+         <field name="model">crm.lead</field>
+         <field name="type">search</field><field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><data><field name="partner_id" position="after">
+					<field name="tour_date_id"/>
+					<field name="product_id"/>
+				</field>
+				<xpath expr="//filter[@name='stage']" position="after">
+					<filter string="Tour Date" domain="[('tour_date_id', '!=', False)]" context="{'group_by':'tour_date_id'}"/>
+					<filter string="Tour Date" domain="[('tour_date_id', '!=', False)]" context="{'group_by':'product_id'}"/>
+				</xpath>
+			</data>
+         </field>
+</record>
+    </data>
+</odoo>

@@ -1,0 +1,178 @@
+<odoo>
+    <data>
+    <record id="tour_travel.visa_booking_form_view" model="ir.ui.view">
+         <field name="name">visa.booking.form</field>
+         <field name="model">visa.booking</field>
+         <field name="type">form</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><form string="Visa Booking">
+					<header>
+						<button name="confirm" string="Confirm" type="object" states="draft" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="verify" string="Verify Document" type="object" states="confirm" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="approve" string="Approve By Officer" type="object" states="verify" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="cancel" string="Cancel" type="object" states="confirm,verify" groups="tour_travel.group_tour_travel_manager"/>
+						<button name="issue_visa" string="Issue Visa" type="object" states="approve" class="oe_highlight" groups="tour_travel.group_tour_travel_manager"/>
+						<field name="state" readonly="1" statusbar_visible="draft, confirm, verify, approve, done" widget="statusbar"/>
+					</header>
+					<sheet>
+						<div class="oe_title">
+                            <label for="name" class="oe_edit_only" string="Booking ID"/>
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+						<group>
+							<group string="Booking Information">
+								<field name="customer_id" context="{'search_default_customer':1,'default_customer':1,'search_default_is_company':0,'default_is_company':0}"/>
+								<field name="pricelist_id"/>
+								<field name="currency_id" groups="base.group_multi_currency"/>
+								<field name="email"/>
+								<field name="mobile"/>
+								<field name="current_date"/>
+								<field name="user_id"/>
+							</group>
+							<group string="Visa Information">
+								<field name="holder_id"/>
+								<field name="visa_number" attrs="{'readonly': [('state','in',('draft','confirm','verify','done','cancel'))], 'required': [('state','=','approve')]}"/>
+								<field name="issue_date" attrs="{'readonly': [('state','in',('draft','confirm','verify','done','cancel'))], 'required': [('state','=','approve')]}"/>
+								<field name="expiry_date" attrs="{'readonly': [('state','in',('draft','confirm','verify','done','cancel'))], 'required': [('state','=','approve')]}"/>
+								<field name="passport_id" domain="['&amp;',('partner_id','=',holder_id),('state','=','available')]"/>
+								<field name="country_id"/>
+								<field name="visa_type_id"/>
+								<field name="product_id" context="{'search_default_sale_ok':1,'default_sale_ok':1,'search_default_type':'service','default_type':'service'}"/>
+								<field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Required Documents">
+								<field name="document_ids">
+									<tree string="Document Information" editable="bottom">
+										<field name="tour_document_type_id"/>
+										<field name="name"/>
+										<field name="original_copy"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Attachments">
+								<field name="attachment_ids">
+									<tree string="Attachments">
+										<field name="name"/>
+										<field name="datas_fname"/>
+										<field name="document_type_id"/>
+										<field name="type"/>
+										<field name="company_id" groups="base.group_multi_company"/>
+										<field name="create_uid"/>
+										<field name="create_date"/>
+									</tree>
+								</field>
+							</page>
+							<page string="Sales Order &amp; Invoices">
+								<separator string="Sales Order"/>
+								<field name="sale_order_ids"/>
+								<separator string="Invoices"/>
+								<field name="invoice_ids">
+									<tree string="Invoice">
+										<field name="partner_id" groups="base.group_user"/>
+										<field name="commercial_partner_id" invisible="1"/>
+										<field name="date_invoice"/>
+										<field name="number"/>
+										<field name="reference" invisible="1"/>
+										<field name="name" invisible="1"/>
+										<field name="journal_id" invisible="1"/>
+										<field name="company_id" groups="base.group_multi_company" widget="selection"/>
+										<field name="user_id" string="Responsible" invisible="1"/>
+										<field name="date_due"/>
+										<field name="origin" invisible="1"/>
+										<field name="currency_id" groups="base.group_multi_currency"/>
+										<field name="residual" sum="Residual Amount"/>
+										<field name="amount_untaxed" sum="Untaxed Amount"/>
+										<field name="amount_total" sum="Total Amount"/>
+										<field name="state"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+						<field name="message_ids" widget="mail_thread"/>
+					</div>
+				</form>
+         </field>
+</record>
+<record id="tour_travel.visa_booking_tree_view" model="ir.ui.view">
+         <field name="name">visa.booking.tree</field>
+         <field name="model">visa.booking</field>
+         <field name="type">tree</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><tree string="Visa Booking" decoration-info="state=='draft'" decoration-warning="state=='cancel'" decoration-muted="state=='done'">
+					<field name="name"/>
+					<field name="visa_number"/>
+					<field name="customer_id"/>
+					<field name="holder_id"/>
+					<field name="country_id"/>
+					<field name="visa_type_id"/>
+					<field name="price"/>
+					<field name="state"/>
+				</tree>
+         </field>
+</record>
+<record id="tour_travel.visa_booking_calendar_view" model="ir.ui.view">
+         <field name="name">visa.booking.calendar</field>
+         <field name="model">visa.booking</field>
+         <field name="type">calendar</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><calendar string="Visa Booking" color="customer_id" date_start="current_date">
+					<field name="customer_id"/>
+					<field name="price"/>
+				</calendar>
+         </field>
+</record>
+<record id="tour_travel.visa_booking_graph_view" model="ir.ui.view">
+         <field name="name">visa.booking.graph</field>
+         <field name="model">visa.booking</field>
+         <field name="type">graph</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><graph string="Visa Booking" type="bar">
+					<field name="customer_id"/>
+					<field name="price" operator="+"/>
+				</graph>
+         </field>
+</record>
+<record id="tour_travel.visa_booking_search_view" model="ir.ui.view">
+         <field name="name">visa.booking.search</field>
+         <field name="model">visa.booking</field>
+         <field name="type">search</field>
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><search string="Search">
+					<field name="name" string="Booking ID" filter_domain="[('name','ilike', self)]"/>
+					<field name="visa_number" string="Visa Number" filter_domain="[('visa_number','ilike', self)]"/>
+					<field name="passport_id" string="Passport Number" filter_domain="[('passport_id','ilike', self)]"/>
+					<field name="customer_id" string="Customer" filter_domain="[('customer_id','ilike', self)]"/>
+					<field name="holder_id" string="Holder" filter_domain="[('holder_id','ilike', self)]"/>
+					<field name="country_id" string="Country" filter_domain="[('country_id','ilike', self)]"/>
+					<field name="visa_type_id" string="Visa Type" filter_domain="[('visa_type_id','ilike', self)]"/>
+					<field name="user_id" string="Responsible" filter_domain="[('user_id','ilike', self)]"/>
+					<separator/>
+					<filter string="Confirmed" name="confirm" domain="[('state','=','confirm')]" help="Confirmed"/>
+					<filter string="Verified" name="verify" domain="[('state','=','verify')]" help="Verified"/>
+					<filter string="Approved" name="approve" domain="[('state','=','approve')]" help="Approved"/>
+					<separator/>
+					<filter string="Done" name="done" domain="[('state','=','done')]" help="Done"/>
+					<filter string="Cancelled" name="cancel" domain="[('state','=','cancel')]" help="Cancelled"/>
+					<group expand="0" string="Group By...">
+						<filter string="Customer" domain="[]" context="{'group_by':'customer_id'}"/>
+						<filter string="Responsible" domain="[]" context="{'group_by':'user_id'}"/>
+						<filter string="Passport Number" domain="[]" context="{'group_by':'passport_id'}"/>
+						<filter string="Country" domain="[]" context="{'group_by':'country_id'}"/>
+						<filter string="Visa Type" domain="[]" context="{'group_by':'visa_type_id'}"/>
+						<separator/>
+						<filter string="Monthly Orders" icon="terp-go-month" domain="[]" context="{'group_by':'current_date'}"/>
+						<filter string="Monthly Issue" icon="terp-go-month" domain="[]" context="{'group_by':'issue_date'}"/>
+						<filter string="Monthly Expire" icon="terp-go-month" domain="[]" context="{'group_by':'expiry_date'}"/>
+					</group>
+				</search>
+         </field>
+</record>
+    </data>
+</odoo>

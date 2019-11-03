@@ -1,0 +1,211 @@
+<odoo>
+    <data>
+    <record id="tour_travel.report_tour_booking" model="ir.ui.view">
+         <field name="name">report_tour_booking</field>
+         <field name="model"></field>
+         <field name="type">qweb</field><field name="inherit_id" ref="sale.report_saleorder_document"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><data inherit_id="sale.report_saleorder_document">
+			<xpath expr="//p[@t-field=&quot;doc.note&quot;]" position="after">
+				<t t-if="doc.tour_id">
+					<div class="row">
+						<h3 style="width:100%;background-color:#ccc;padding:5px;">
+							QUOTATION SUMMARY DETAILS
+						</h3>
+						<div class="col-xs-3">
+							<p>Tour:</p>
+							<p>Departure:</p>
+							<p t-if="doc.tour_date_id.start_date">Departure Date:</p>
+							<p>Tour Duration (in days):</p>
+						</div>
+						<div class="col-xs-9">
+							<p>
+								<span t-esc="doc.tour_id.name"/>
+							</p>
+							<p>
+								<span t-esc="doc.tour_id.departure.name"/>
+								<t t-if="doc.tour_id.departure.city">
+									,
+									<span t-esc="doc.tour_id.departure.city"/>
+								</t>
+								<t t-if="doc.tour_id.departure.state_id">
+									,
+									<span t-esc="doc.tour_id.departure.state_id.name"/>
+								</t>
+								<t t-if="doc.tour_id.departure.country_id">
+									,
+									<span t-esc="doc.tour_id.departure.country_id.name"/>
+								</t>
+							</p>
+							<p>
+								<span t-field="doc.tour_date_id.start_date"/>
+							</p>
+							<p>
+								<span t-esc="doc.tour_date_id.duration if doc.tour_date_id else doc.tour_id.duration"/>
+								day(s)
+							</p>
+						</div>
+					</div>
+					<div class="row">
+						<h3 style="width:100%;background-color:#ccc;padding:5px;">
+							ITINERARIES
+						</h3>
+						<t t-foreach="doc.tour_date_id.tour_date_program_ids if doc.tour_date_id else doc.tour_id.tour_program_ids" t-as="program">
+							<div class="media" style="padding-right:15px;padding-left:15px;">
+								<span class="media-left pull-left" t-field="program.tour_program_id.image_medium" t-field-options="{&quot;widget&quot;: &quot;image&quot;, &quot;class&quot;: &quot;img-thumbnail&quot;}"/>
+								<div class="media-body">
+									<h4 class="media-heading">
+										<t t-if="program.day">Day <span t-esc="program.day"/>: </t><span t-esc="program.tour_program_id.name"/>
+									</h4>
+									<span t-field="program.tour_program_id.description" class="text-muted"/>
+								</div>
+							</div>
+						</t>
+					</div>
+					<div class="row">
+						<h3 style="width:100%;background-color:#ccc;padding:5px;">
+							DESTINATIONS
+						</h3>
+						<t t-foreach="doc.tour_date_id.tour_date_destination_ids if doc.tour_date_id else doc.tour_id.tour_destination_ids" t-as="destination">
+							<h4>
+								<span t-esc="destination.destination_id.name" style="text-transform:uppercase;"/>
+								<t t-if="destination.city">
+									,
+									<span t-esc="destination.city" style="text-transform:uppercase;"/>
+								</t>
+								<t t-if="destination.state_id">
+									,
+									<span t-esc="destination.state_id.name" style="text-transform:uppercase;"/>
+								</t>
+								<t t-if="destination.country_id">
+									,
+									<span t-esc="destination.country_id.name" style="text-transform:uppercase;"/>
+								</t>
+								<t t-if="destination.days">
+									,
+									<span t-esc="destination.days" style="text-transform:uppercase;"/>
+									day(s)
+								</t>
+							</h4>
+							<t t-if="destination.hotel_ids">
+								<table class="table">
+									<tr>
+										<th>Hotel Class</th>
+										<th>Hotel</th>
+										<th>Room Type</th>
+										<th>No. of Days</th>
+									</tr>
+									<tr t-foreach="destination.hotel_ids" t-as="hotel">
+										<td>
+											<span t-esc="hotel.hotel_class_id.name"/>
+										</td>
+										<td>
+											<span t-esc="hotel.hotel_id.name"/>
+										</td>
+										<td>
+											<span t-esc="hotel.room_id.name"/>
+										</td>
+										<td>
+											<span t-esc="hotel.days"/>
+										</td>
+									</tr>
+								</table>
+							</t>
+						</t>
+					</div>
+					<div class="row">
+						<h3 style="width:100%;background-color:#ccc;padding:5px;">
+							TRANSPORTATIONS
+						</h3>
+						<t t-if="doc.tour_date_id.tour_date_transport_ids if doc.tour_date_id else doc.tour_id.transport_ids">
+							<table class="table">
+								<tr>
+									<th>From</th>
+									<th>To</th>
+									<th>Carrier</th>
+									<th>Type</th>
+								</tr>
+								<tr t-foreach="doc.tour_date_id.tour_date_transport_ids if doc.tour_date_id else doc.tour_id.transport_ids" t-as="transport">
+									<td>
+										<span t-esc="transport.from_destination.name"/>
+									</td>
+									<td>
+										<span t-esc="transport.to_destination.name"/>
+									</td>
+									<td>
+										<span t-esc="transport.carrier_id.name"/>
+									</td>
+									<td>
+										<span t-esc="transport.product_name"/>
+									</td>
+								</tr>
+							</table>
+						</t>
+					</div>
+					<div class="row">
+						<h3 style="width:100%;background-color:#ccc;padding:5px;">
+							INCLUSIONS
+						</h3>
+						<t t-if="doc.tour_date_id.tour_date_product_ids if doc.tour_date_id else doc.tour_id.product_ids">
+							<table class="table">
+								<tr>
+									<th>Product</th>
+									<th>Description</th>
+									<th>Quantity</th>
+									<th>Unit of Measure</th>
+								</tr>
+								<tr t-foreach="doc.tour_date_id.tour_date_product_ids if doc.tour_date_id else doc.tour_id.product_ids" t-as="product">
+									<td>
+										<span t-esc="product.product_id.name"/>
+									</td>
+									<td>
+										<span t-esc="product.name"/>
+									</td>
+									<td>
+										<span t-esc="product.product_uom_qty"/>
+									</td>
+									<td>
+										<span t-esc="product.product_uom.name"/>
+									</td>
+								</tr>
+							</table>
+						</t>
+					</div>
+				</t>
+			</xpath>
+		</data>
+         </field>
+</record>
+<record id="tour_travel.t_report_header" model="ir.ui.view">
+         <field name="name">t_report_header</field>
+         <field name="model"></field>
+         <field name="type">qweb</field><field name="inherit_id" ref="web.external_layout_background"/>
+            
+         <field name="priority">16</field>
+         <field name="arch" type="xml"><data inherit_id="web.external_layout_background">
+			<xpath expr="//div[1]" position="replace">
+				<div class="header o_background_header">
+					<div class="row">
+						<div class="col-xs-3">
+							<img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" style="max-height: 45px;"/>
+						</div>
+						<div class="col-xs-9 text-right" style="margin-top:20px;" t-field="company.report_header"/>
+					</div>
+					<div class="row zero_min_height">
+						<div class="col-xs-12">
+							<div style="border-bottom: 1px solid black;"/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-5">
+							<div t-field="company.partner_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}" style="border-bottom: 1px solid black;"/>
+						</div>
+					</div>
+				</div>
+			</xpath>
+		</data>
+         </field>
+</record>
+    </data>
+</odoo>
