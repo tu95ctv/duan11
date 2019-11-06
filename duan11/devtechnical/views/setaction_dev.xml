@@ -1,0 +1,58 @@
+<odoo>
+
+
+	<data>
+		<record id="setaction_duyet_diem_form" model="ir.ui.view">
+            <field name="name">setaction.duyet.diem.form</field>
+            <field name="model">setaction.setaction</field>
+            <field name="inherit_id" ref="setaction.setaction_form"></field>
+            <field name="arch" type="xml">
+            	<xpath expr="//footer" position="inside">
+                  	<button name="set_depends_is_trig" type="object" string="set_depends_is_trig" class="oe_highlight" attrs="{'invisible':[('context_val','!=','set_depends_is_trig')]}" />
+            		
+            		<!-- 
+            		<button name="multi_approved" type="object" string="Approved" class="oe_highlight"  attrs="{'invisible':[('context_val','!=','duyet_diem')]}"  />
+            		<button name="multi_draft" type="object" string="multi_draft" class="oe_highlight"  attrs="{'invisible':[('context_val','!=','duyet_diem')]}"  />
+            		<button name="multi_mark_delete" type="object" string="multi_mark_delete" class="oe_highlight"  attrs="{'invisible':[('context_val','!=','duyet_diem')]}" />
+            		<button name="copy_diem" type="object" string="Copy Điểm" class="oe_highlight"  attrs="{'invisible':[('context_val','!=','copy_diem')]}"  />
+            		<button name="auto_create_import_user" type="object" string="auto_create_import_user" class="oe_highlight"  attrs="{'invisible':[('context_val','!=','auto_create_import_user')]}"  />
+            	 -->
+            	</xpath>
+            
+            </field>
+            </record>   
+            
+            
+            
+        
+        <act_window
+            id="set_depends_is_trig"
+            name="set_depends_is_trig"
+            res_model="setaction.setaction"
+            src_model="ir.actions.act_window"
+            view_mode="form"
+            multi="True"
+            target="new"
+            key2="client_action_multi"
+            context="{'context_val':'set_depends_is_trig'}"
+        />
+        
+        
+        <act_window
+            id="set_depends_is_trig_for_menu"
+            name="set_depends_is_trig"
+            res_model="setaction.setaction"
+            src_model="ir.ui.menu"
+            view_mode="form"
+            multi="True"
+            target="new"
+            key2="client_action_multi"
+            context="{'context_val':'set_depends_is_trig'}"
+        />
+        
+        
+      
+        
+	
+	</data>
+</odoo>

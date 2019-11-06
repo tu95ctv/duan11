@@ -14,18 +14,18 @@ MODULES = 'bizapps_medical'
 MODULES = 'tour_travel'
     
 NOT_IN =  ['__last_update', 'create_date', 'create_uid', 'display_name', 'id', 'write_date', 'write_uid','message_channel_ids','message_follower_ids','message_ids']
-TYPE = [         ('tree', 'Tree'),
-                             ('form', 'Form'),
-                             ('graph', 'Graph'),
-                             ('pivot', 'Pivot'),
-                             ('calendar', 'Calendar'),
-                             ('diagram', 'Diagram'),
-                             ('gantt', 'Gantt'),
-                             ('kanban', 'Kanban'),
-                             ('search', 'Search'),
-                             ('qweb', 'QWeb')]
-TYPE = [(i[1],i[0]) for i in TYPE]
-TYPE = dict(TYPE)
+# TYPE = [         ('tree', 'Tree'),
+#                              ('form', 'Form'),
+#                              ('graph', 'Graph'),
+#                              ('pivot', 'Pivot'),
+#                              ('calendar', 'Calendar'),
+#                              ('diagram', 'Diagram'),
+#                              ('gantt', 'Gantt'),
+#                              ('kanban', 'Kanban'),
+#                              ('search', 'Search'),
+#                              ('qweb', 'QWeb')]
+# TYPE = [(i[1],i[0]) for i in TYPE]
+# TYPE = dict(TYPE)
 
 
 def domain_(v):
@@ -56,32 +56,37 @@ def escapse_xml(val):
 
 
 class Gen():
-    def __init__(self, env,app):
+    def __init__(self, env,app, self_gen_model):
         self.env = env
         self.app = app
+        self.self_gen_model = self_gen_model
+        begin_func = getattr(self, 'begin_func')
+        if begin_func:
+            begin_func()
+        
         pass
     
     template = '''<record id="%(id_char)s" model="ir.actions.act_window">
          <field name="name">%(name)s</field>
          <field name="res_model">%(res_model)s</field>
          <field name="view_type">%(view_type)s</field>
-         <field name="view_mode">tree,form</field>
-         %(view_id) s%(search_view_id)s %(domain)s %(context)s </record>
+         <field name="view_mode">%(view_mode)s</field>
+         %(src_model)s%(target)s%(multi)s%(view_id)s%(search_view_id)s%(domain)s%(context)s </record>
       '''
    
     @property
     def fieldlist(self):
-#         fieldlist1 = ['id_char', 'name',('action',{'func':lambda v: '' if v =='False' else v, 'field_template':'action="%s"'}), ('sequence',{'func':lambda v: int(float(v))}),
-#                       ('parent_id',{'func':lambda v: '' if v =='False' else v, 'field_template':'parent="%s" '})]
-#         return fieldlist1
-    
-        fieldlist = ['id_char', 'name', 'res_model', ('view_type',{'func':lambda v: v.lower()}),
+        fieldlist = ['id_char', 'name', 'res_model', ('view_type',{'func':lambda v: v.lower()}),'view_mode',
+                     ('src_model',{'field_template':'        <field name="src_model">%s</field>\n', 'func':lambda v: '' if not v or v =='False' else v}),
+                     ('target',{'field_template':'        <field name="target">%s</field>\n', 'func':lambda v: 'new' if v=='New Window' else ''}),
+                     ('multi',{'field_template':'        <field name="multi">%s</field>\n', 'func_complete':lambda v,self: True if self.rec.src_model else ''}),
                      ('view_id', {'field_template':'<field name="view_id" ref ="%s"/>\n', 'func':lambda v: '' if v =='False' else v}),
                      ('search_view_id', {'field_template':'        <field name="search_view_id" ref ="%s"/>\n', 'func':lambda v: '' if v =='False' else v}),
                      ('domain', {'field_template':'        <field name="domain">%s</field>\n', 'func':domain_}),
                      ('context', {'field_template':'        <field name="context">%s</field>\n', 'func':context_}),
                       ]
         return fieldlist
+    
     model = 'import_adj.action_import'
     @property
     def recs(self):
@@ -97,7 +102,7 @@ class Gen():
             field_name = afield
             attrs = {}
                 
-        
+        func_complete = attrs.get('func_complete')
         func = attrs.get('func')
         no_escapse = attrs.get('no_escapse')
         field_template = attrs.get('field_template')
@@ -105,6 +110,8 @@ class Gen():
         
         if not no_escapse:
             val = escapse_xml(str(val))
+        if func_complete:
+            val = func_complete(val, self)
         if func:
             val = func(val)
         
@@ -112,8 +119,6 @@ class Gen():
             val_last = field_template%val
         else:
             val_last = val
-        print (field_name, '*******val_last*******', val_last)   
-#         print ('***self.rec: %s, field_name: %s, val:%s, val_last: %s'%(self.rec, field_name, val, val_last))
         return (field_name,val_last)
 
 
@@ -124,24 +129,24 @@ class Gen():
             rs = dict(rs)
             print ("**context", rs)
             return self.template%rs
-        
-    def gen_xml_of_records(self):
-        rs = map(self.gen_a_record_xml,  self.recs)
+         
+    def gen_xml_of_records(self, recs = None):
+        recs = recs or self.recs
+        rs = map(self.gen_a_record_xml, recs)
         odoo_xml_tag = '''<odoo>
     <data>
     %s
     </data>
 </odoo>'''
         va = odoo_xml_tag% '\n'.join(rs)
+        finish_func = getattr(self, 'finish_func')
+        if finish_func:
+            finish_func()
         return va
         
         
 
 class GenView(Gen):
-#     def __init__(self, env):
-#         self.env = env
-#         pass
-    
     template = '''<record id="%(id_char)s" model="ir.ui.view">
          <field name="name">%(name)s</field>
          <field name="model">%(model)s</field>
@@ -150,10 +155,41 @@ class GenView(Gen):
          <field name="arch" type="xml">%(arch_db)s
          </field>
 </record>'''
-   
-    
-    
-   
+    @property
+    def finish_func(self):
+#         raise UserError('finish_func***')
+        self.self_gen_model.log_txt = 'rs: %s'%self.log
+        
+    def begin_func(self):
+        path = r'/mnt/c\Users\tu\Desktop\tour_goc_again\ir.model.data.csv'
+        path = path.replace('\\', '/')
+        f = open(path,'r')
+        r = f.read()
+        self.f =r
+    def arch_db_func_complete_(self,val,self_gen_model):
+#         <button class="oe_inline oe_stat_button" type="action" name="414" 
+#         pattern_template = '(button.*?name="%s")'
+# #         pattern = 'button.*?name="(\d+)"'
+#         pattern = pattern_template%'(\d+)'
+        pattern = '''(button.*?name=["'](\d+)["'])'''
+        rs = re.findall(pattern,val)
+        print ('***rs***', rs)
+        action_ids = []
+        if rs:
+            for match, action_id in rs:
+                print ('***action_id', action_id)
+                search_rs = re.search('(?<!\s)"(\w*?)","ir.actions.act_window","(.*?)","%s"'%action_id, self.f)
+              
+                action_name = '%%(%s.%s)d'%(search_rs.group(2), search_rs.group(1))
+                repl = match.replace(action_id, action_name)
+                val = val.replace(match, repl )
+                action_id_return = 'match:%s-repl:%s-action_id:%s-action_name: %s'%(match, repl, action_id, action_name)
+                action_ids.append(action_id_return)
+            log = getattr(self, 'log',[])
+            log.append(action_ids)
+            self.log = log
+        return val
+            
     @property
     def fieldlist(self):
         TYPE = [         ('tree', 'Tree'),
@@ -175,7 +211,8 @@ class GenView(Gen):
             v =  '' if (not v or v=='0' or v=='False') else tpl_inherit%v
             return v
         fieldlist1 = ['id_char', 'name', ('type',{'func':lambda v:TYPE[v]}), ('model',{'func':lambda v: '' if v =='False' else v}), ('priority',{'func':lambda v: int(float(v)) }),
-                            ('inherit_id',{'func': inherit_id_}),('arch_db',{'no_escapse':True})
+                            ('inherit_id',{'func': inherit_id_}),
+                            ('arch_db',{'no_escapse':True, 'func_complete': self.arch_db_func_complete_})
                              ]
         return fieldlist1
         
@@ -198,7 +235,7 @@ class Todo(models.Model):
     models_ids = fields.Many2many('ir.model')
     test2= fields.Text()
     test = fields.Text()
-    
+    log_txt = fields.Text()
     module_inherits = fields.Char()
     relation_not_finds = fields.Char() 
     app = fields.Selection([('bizapps_medical','bizapps_medical'),('tour_travel','tour_travel')], default = 'bizapps_medical')
@@ -224,8 +261,6 @@ class Todo(models.Model):
                 class_model = False
             model.arch_fs_search = set(arch_fss)
             model.class_model = class_model
-                
-#             print ('*****class_model',class_model)
             return class_model
         
         
@@ -233,22 +268,15 @@ class Todo(models.Model):
         class_models = list(map(search_arch_fs, models))
         class_models = filter(lambda i:i, class_models)
         class_models = sorted(class_models, key = lambda i: len(i), reverse=True)
-#         print 'don.............'
-#         class_models = list(set(map(lambda i:i.replace('_','.'),class_models)))
         class_models = set(class_models)
         models_class_model_false = self.env['import_adj.model_import'].search(['|', ('active','=',False),('active','=',True),('class_model','=',False)])
-        print (models_class_model_false.mapped('model'))
         def search_class_model(model):
-#             model_name  = model.model
-            print ('**model.id', model.id,model.model, model.id_char)
             modelname = model.model
             for class_model in class_models:
                 class_model_match = False
                 template = r'^%s'%class_model.replace('.','\.')
                 re_rs = re.search(template, modelname)
-                print ('**template',template,'***model_name', modelname,'*re_rs',re_rs)
                 if re_rs:
-#                     raise UserError('A')
                     class_model_match = class_model
                     model.class_model = class_model_match
                     break
@@ -256,12 +284,6 @@ class Todo(models.Model):
             model.filename = filename.replace('.','_') +'.py'
             return True
         list(map(search_class_model, models_class_model_false)) 
-        
-#         models_class_model_false = self.env['import_adj.model_import'].search(['|', ('active','=',False),('active','=',True),('class_model','=',False)])
-# 
-#         def set_filename(model):
-#             filename = model.class_model or model.
-#             
         
                 
             
@@ -297,10 +319,8 @@ class Todo(models.Model):
         def mk_file(filename_view_objects):
             arch_fs, view_object_olds = filename_view_objects
             view_objects = view_object_olds.sorted(lambda i: view_type_sort.get(i.type,6))
-#             view_objects = sorted(lambda i: view_type_sort.get(i.ttype, 4), view_objects)
-            print (arch_fs, view_objects.mapped('type'),view_object_olds.mapped('type') )
             yourpath = __file__
-            filename =  os.path.abspath(os.path.join(yourpath, os.pardir, os.pardir, os.pardir, 'auto_create', arch_fs))
+            filename =  os.path.abspath(os.path.join(yourpath, os.pardir, os.pardir, os.pardir,os.pardir,  'gen_file', arch_fs))
             if not os.path.exists(os.path.dirname(filename)):
                 try:
                     os.makedirs(os.path.dirname(filename))
@@ -308,7 +328,7 @@ class Todo(models.Model):
                     if exc.errno != errno.EEXIST:
                         raise
             f= open(filename,"w")
-            rs = self.gen_view(view_objects)
+            rs = self._gen_view(view_objects)
             f.write(rs)
             f.close()
             return "'%s'"%arch_fs.replace('tour_travel/','')
@@ -357,10 +377,6 @@ class Todo(models.Model):
     def search_model_id(self):
         fields = self.env['import_adj.fields_import'].search([])
         for field in fields:
-#             model_id = self.env['import_adj.model_import'].search(['|', ('active','=',False),('active','=',True),('ir_model_data_name','=', field.model_id.split('.')[-1])])
-#             model_id = self.env['import_adj.model_import'].search(['|', ('active','=',False),('active','=',True),('first_module','=', field.model_id )])
-#             field.model_name = model_id.first_module
-            
             model = self.env['import_adj.model_import'].search(['|', ('active','=',False),('active','=',True),('model','=', field.model_look_sum)])
             field.model_name = model
             
@@ -390,11 +406,6 @@ class Todo(models.Model):
                 s= related.split('.')
                 field1, field2 = s[0],s[1]
                 field.field2 = field2
-                
-                
-                
-                
-                
                 field1_obj = self.env['import_adj.fields_import'].search([('model_id','=', field.model_id),('name','=', field1)])\
                 or self.env['ir.model.fields'].search([('model_id','=', field.model_look_sum),('name','=', field1)])
                 
@@ -476,16 +487,20 @@ class Todo(models.Model):
                     
                     
     def gen_menu(self):
-        rs = GenMenu(self.env, self.app).gen_xml_of_records()
+        rs = GenMenu(self.env, self.app, self).gen_xml_of_records()
         self.test2 = rs
-    
+
     def gen_view(self):
-        rs = GenView(self.env, self.app).gen_xml_of_records()
+        rs = self._gen_view()
         self.test2 = rs
         return rs
     
+    def _gen_view(self, recs = None):
+        rs = GenView(self.env, self.app, self).gen_xml_of_records(recs)
+        return rs
+    
     def gen_action(self):
-        rs = Gen(self.env,self.app).gen_xml_of_records()
+        rs = Gen(self.env,self.app, self).gen_xml_of_records()
         self.test2 = rs
     #############1##################
     
@@ -541,9 +556,6 @@ class Todo(models.Model):
         return '\n\t'.join(pres) +'\n\n'
 
 
-
-
-
     def add_more_to_model_group(self, read_group_rs):
         for i in read_group_rs:
             model_id = i['model_id']
@@ -592,19 +604,13 @@ class Todo(models.Model):
     
     def gen_model_and_field(self):
         domain = ['|', ('active','=',False),('active','=',True)]
-#         model_groups = self.env['import_adj.fields_import'].read_group(domain, ['model_id'],['model_id'], lazy=False)
         model_groups = self.env['import_adj.model_import'].search(domain)
-#         self.add_more_to_model_group(model_groups)
         model_groups_adding_more_info = sorted(model_groups, key=lambda i: i.active)
-       
-        
         def gen_a_model(model):    
             fields_ids = self.env['import_adj.fields_import'].search([('model_look_sum','=',model['model']),('name','not in', NOT_IN)])
-#             name_or_inherit = model_group_read_item['name_or_inherit'] 
             name_or_inherit = '_name' if model.active else '_inherit'
             model_name = model.model
             modelclass = model_name.replace('.',' ').title().replace(' ','')
-#             modelclass = modelclass.replace(' ','').replace('.','')
             item_model_python = self.gen_item_model_python(model_name, model.transient, modelclass,name_or_inherit, fields_ids, add_mixin = True)
             return item_model_python
         model_pythons = map(gen_a_model, model_groups_adding_more_info)
@@ -625,7 +631,7 @@ class Todo(models.Model):
             return self.gen_pre_declare_model(model_name, fields_ids=[fieldname])
         self.test2 = u'\n\n'.join(map(gen_pre_declare_model_default_fields, rs))
 
-    def write(self,vals):
+    def write(self, vals):
 #         print ('dung buon em hoi***********')
         rs = models.Model.write(self, vals)
         return rs

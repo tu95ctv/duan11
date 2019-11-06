@@ -33,6 +33,7 @@
                   	 <field name="app"/>
                   	 <field name="module_inherits"/>
                   	 <field name="relation_not_finds"/>
+                  	 <field name="log_txt"/>
                   	 <field name="pre_models"/>
                      <field name="test2"/>
                      <field name="models" />

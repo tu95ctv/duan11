@@ -122,6 +122,7 @@ class ActionImport(models.Model):
     view_mode = fields.Char()
     view_type = fields.Char()
     views = fields.Char()
+    id_number = fields.Integer()
 
     
 class MenuImport(models.Model):

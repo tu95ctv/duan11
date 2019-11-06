@@ -287,7 +287,7 @@ def look_up_col_index(MD, read_excel_value, col, is_write = True):
             xl_title_s =  xl_title if isinstance(xl_title, list) else [xl_title]
             for xl_title in xl_title_s:
                 xl_title_partern = u'^%s$'%xl_title
-                xl_title_partern = xl_title_partern.replace('\\','\\\\').replace('(','\(').replace(')','\)') #không thể thể hiện chuổi \ nên thể hiện bằng \\
+                xl_title_partern = xl_title_partern.replace('\\','\\\\').replace('(','\(').replace(')','\)').replace('.','\.') #không thể thể hiện chuổi \ nên thể hiện bằng \\
                 rs = re.search(xl_title_partern, read_excel_value, re.IGNORECASE)
                 if rs:
                     if is_write:

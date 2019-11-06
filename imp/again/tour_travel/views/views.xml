@@ -113,28 +113,28 @@
 					</header>
 					<sheet>
 						<div class="oe_button_box" name="button_box">
-							<button class="oe_inline oe_stat_button" type="action" name="279" context="{'search_default_tour_date_id': active_id}" icon="fa-star">
+							<button class="oe_inline oe_stat_button" type="action" name="%(crm.crm_lead_opportunities_tree_view)d" context="{'search_default_tour_date_id': active_id}" icon="fa-star">
 								<field string="Leads" name="lead_count" widget="statinfo"/>
 							</button>
-							<button class="oe_inline oe_stat_button" type="action" name="280" context="{'search_default_tour_date_id': active_id}" icon="fa-star">
+							<button class="oe_inline oe_stat_button" type="action" name="%(crm.crm_lead_action_activities)d" context="{'search_default_tour_date_id': active_id}" icon="fa-star">
 								<field string="Opportunities" name="oppor_count" widget="statinfo"/>
 							</button>
-							<button class="oe_inline oe_stat_button" type="action" name="414" icon="fa-strikethrough">
+							<button class="oe_inline oe_stat_button" type="action" name="%(tour_travel.act_tour_date_2_tour_quotation)d" icon="fa-strikethrough">
 								<field string="Quotations" name="tour_quotation_count" widget="statinfo"/>
 							</button>
-							<button class="oe_inline oe_stat_button" type="action" name="413" icon="fa-strikethrough">
+							<button class="oe_inline oe_stat_button" type="action" name="%(tour_travel.act_tour_date_2_tour_booking)d" icon="fa-strikethrough">
 								<field string="Tour Bookings" name="tour_booking_count" widget="statinfo"/>
 							</button>
 							<button class="oe_inline oe_stat_button" name="action_view_attendee" type="object" icon="fa-user">
 								<field string="Attendees" name="attendee_count" widget="statinfo"/>
 							</button>
-							<button class="oe_inline oe_stat_button" type="action" name="416" icon="fa-shopping-cart">
+							<button class="oe_inline oe_stat_button" type="action" name="%(tour_travel.act_tour_date_2_rfq)d" icon="fa-shopping-cart">
 								<field string="RFQs" name="rfq_count" widget="statinfo"/>
 							</button>
-							<button class="oe_inline oe_stat_button" name="415" type="action" icon="fa-shopping-cart">
+							<button class="oe_inline oe_stat_button" name="%(tour_travel.act_tour_date_2_purchase_order)d" type="action" icon="fa-shopping-cart">
 								<field string="Purchases" name="purchase_order_count" widget="statinfo"/>
 							</button>
-							 <button class="oe_stat_button" type="action" name="419" icon="fa-usd" string="Cost/Revenue" widget="statinfo" attrs="{'invisible': [('analytic_account_id', '=', False)]}" context="{'analytic_account_id': analytic_account_id}" groups="tour_travel.group_tour_travel_manager"/>
+							 <button class="oe_stat_button" type="action" name="%(tour_travel.tour_date_2_account_analytic_action)d" icon="fa-usd" string="Cost/Revenue" widget="statinfo" attrs="{'invisible': [('analytic_account_id', '=', False)]}" context="{'analytic_account_id': analytic_account_id}" groups="tour_travel.group_tour_travel_manager"/>
 						</div>
 						<div class="oe_title">
 							<label for="name" class="oe_edit_only" string="Code"/>
@@ -1206,22 +1206,17 @@
 			</data>
          </field>
 </record>
-
-<!-- 
 <record id="tour_travel.tour_crm_new_quotation_inherit" model="ir.ui.view">
          <field name="name">tour.crm.new.quotation.inherit</field>
          <field name="model">crm.lead</field>
          <field name="type">form</field><field name="inherit_id" ref="sale_crm.crm_case_form_view_oppor"/>
             
          <field name="priority">16</field>
-         <field name="arch" type="xml"><xpath expr="//button[@name='399']" position="replace">
-					<button string="New Quotation" name="399" type="action" class="oe_highlight" context="{'search_default_partner_id': partner_id,                                   'default_partner_id': partner_id,                                   'default_team_id': team_id,                                   'default_is_tour_booking': 1,                                   'default_tour_date_id': tour_date_id,}"/>
+         <field name="arch" type="xml"><xpath expr="//button[@name='%(sale_crm.sale_action_quotations_new)d']" position="replace">
+					<button string="New Quotation" name="%(sale_crm.sale_action_quotations_new)d" type="action" class="oe_highlight" context="{'search_default_partner_id': partner_id,                                   'default_partner_id': partner_id,                                   'default_team_id': team_id,                                   'default_is_tour_booking': 1,                                   'default_tour_date_id': tour_date_id,}"/>
 				</xpath>
          </field>
 </record>
-
- -->
- 
 <record id="tour_travel.tour_crm_oppor_inherit_search" model="ir.ui.view">
          <field name="name">tour.crm.oppor.inherit.search</field>
          <field name="model">crm.lead</field>

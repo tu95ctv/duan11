@@ -1,0 +1,90 @@
+<odoo>
+  <data>
+   	<record id="view_window_action_tree_inherit" model="ir.ui.view">
+         <field name="name">ir.actions.windows.tree.inherit</field>
+         <field name="model">ir.actions.act_window</field>
+         <field name="inherit_id" ref="base.view_window_action_tree"></field>
+         <field name="arch" type="xml">
+         	<field name="name" position="after">
+         		<field name="create_date"/>
+         		<field name="write_date"/>
+         		<field name="xml_id_add2"/>
+         		<field name="menu_id_char"/>
+         	</field>
+         </field>
+      </record>
+     <record id="view_window_action_search" model="ir.ui.view">
+            <field name="name">ir.actions.windows.search</field>
+            <field name="model">ir.actions.act_window</field>
+         	<field name="inherit_id" ref="base.view_window_action_search"></field>
+            <field name="arch" type="xml">
+            	<xpath expr="/search" position="inside">
+            		<field name="xml_id_add2"/>
+         			<field name="menu_id_char"/>
+            	</xpath>
+                <!-- 
+                <search string="Open a Window">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('res_model','ilike',self)]" string="Action"/>
+                    <field name="view_type"/>
+                    <group expand="0" string="Group By" colspan="4">
+                        <filter string="View Type" domain="[]" context="{'group_by':'view_type'}"/>
+                    </group>
+                </search>
+                 -->
+            </field>
+        </record>
+
+       <record id="edit_menu" model="ir.ui.view">
+            <field name="model">ir.ui.menu</field>
+            <field eval="8" name="priority"/>
+            <field name="inherit_id" ref="base.edit_menu"/>
+            <field name="arch" type="xml">
+                    <field name="complete_name" position="after">
+                    	<field name="action"/>
+                    	<field name="xml_id"/>
+                    	<field name="create_date"/>
+                    	<field name="write_date"/>
+                    </field>
+            </field>
+        </record>
+        
+        
+        <record id="edit_menu" model="ir.ui.view">
+            <field name="model">ir.ui.menu</field>
+            <field eval="8" name="priority"/>
+            <field name="inherit_id" ref="base.edit_menu"/>
+            <field name="arch" type="xml">
+                    <field name="complete_name" position="after">
+                    	<field name="action"/>
+                    	<field name="xml_id"/>
+                    	<field name="create_date"/>
+                    	<field name="write_date"/>
+                    </field>
+            </field>
+        </record>
+        
+        <record id="edit_menu_access_search" model="ir.ui.view">
+            <field name="name">ir.ui.menu.search</field>
+            <field name="model">ir.ui.menu</field>
+            <field name="inherit_id" ref="base.edit_menu_access_search"/>
+            <field name="arch" type="xml">
+                    <field name="name" position="after">
+                    	<field name="xml_id"/>
+                    </field>
+            </field>
+        </record>
+        
+        <record id="edit_menu_access_search2" model="ir.ui.view">
+            <field name="name">ir.ui.menu.search</field>
+            <field name="model">ir.ui.menu</field>
+            <field name="inherit_id" ref="edit_menu_access_search"/>
+            <field name="arch" type="xml">
+                    <field name="parent_id" position="after">
+                    	<field name="xml_id"/>
+                    </field>
+            </field>
+        </record>
+        
+      
+  </data>
+</odoo>

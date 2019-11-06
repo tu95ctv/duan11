@@ -42,17 +42,17 @@ class ResPartner(models.Model):
     tour_date_ids = fields.One2many('tour.attendee', 'partner_id')
     gender = fields.Selection([('1','1')])
 
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
-    transport_ids = fields.One2many('tour.transport', related='product_tmpl_id.transport_ids')
-    tour_type = fields.Many2one('tour.type', related='product_tmpl_id.tour_type')
-    tour_program_ids = fields.One2many('tour.program.line', related='product_tmpl_id.tour_program_ids')
-    tour_destination_ids = fields.One2many('tour.destination', related='product_tmpl_id.tour_destination_ids')
-    specific = fields.Selection([('1','1')], related='product_tmpl_id.specific')
-    product_ids = fields.One2many('tour.product', related='product_tmpl_id.product_ids')
-    hotel_ids = fields.One2many('tour.destination.hotel', related='product_tmpl_id.hotel_ids')
-    duration = fields.Integer(related='product_tmpl_id.duration')
-    departure = fields.Many2one('destination', related='product_tmpl_id.departure')
+# class ProductProduct(models.Model):
+#     _inherit = 'product.product'
+#     transport_ids = fields.One2many('tour.transport', related='product_tmpl_id.transport_ids')
+#     tour_type = fields.Many2one('tour.type', related='product_tmpl_id.tour_type')
+#     tour_program_ids = fields.One2many('tour.program.line', related='product_tmpl_id.tour_program_ids')
+#     tour_destination_ids = fields.One2many('tour.destination', related='product_tmpl_id.tour_destination_ids')
+#     specific = fields.Selection([('1','1')], related='product_tmpl_id.specific')
+#     product_ids = fields.One2many('tour.product', related='product_tmpl_id.product_ids')
+#     hotel_ids = fields.One2many('tour.destination.hotel', related='product_tmpl_id.hotel_ids')
+#     duration = fields.Integer(related='product_tmpl_id.duration')
+#     departure = fields.Many2one('destination', related='product_tmpl_id.departure')
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
@@ -64,7 +64,7 @@ class ProductTemplate(models.Model):
     product_ids = fields.One2many('tour.product', 'tour_id')
     transport_ids = fields.One2many('tour.transport', 'tour_id')
     tour_destination_ids = fields.One2many('tour.destination', 'tour_id')
-    specific = fields.Selection([('1','1')])
+    specific = fields.Selection([('tour','tour')])
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
